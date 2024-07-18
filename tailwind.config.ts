@@ -9,7 +9,13 @@ const config: Config = {
     ],
     theme: {
         extend: {
-            colors: {},
+            colors: {
+                background: '#1A1C1D',
+                foreground: '#EDEDED',
+                blue: '#7BA0C3',
+                placeholder: '#585858',
+                input: '#24292E',
+            },
         },
     },
     plugins: [],
