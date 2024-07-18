@@ -1,32 +1,26 @@
-'use client'
-
-import { handleSearchAccInputChange } from '@/utils/handleSearchAccInputChange'
-import { PublicKey } from '@solana/web3.js'
-import { useState } from 'react'
-import Input from '../Input'
-import { useRouter } from 'next/navigation'
 import { SearchInput } from '../SearchInput'
+import { Button } from '../Button'
+import Link from 'next/link'
+import { cn } from '@/utils/style/cn'
 
 type NavBarProps = {
     isAddress: boolean
 }
 
 export const NavBar = ({ isAddress }: NavBarProps) => {
-    const router = useRouter()
-
-    const [invalidAddress, setInvalidAddress] = useState<boolean>()
-    const [address, setAddress] = useState<PublicKey | string>()
-
     return (
-        <div className="w-full fixed flex items-center justify-between py-4 md:py-6 px-9">
-            <div className="font-bold text-blue text-base md:text-lg">
-                SolanaMirror
+        <div
+            className={cn(
+                'w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9 border-b border-blue',
+                !isAddress && 'fixed'
+            )}
+        >
+            <div className="font-bold text-blue text-base md:text-xl">
+                <Link href={'/'}>SolanaMirror</Link>
             </div>
             {isAddress && <SearchInput position={'navbar'} />}
 
-            <button className="truncate px-4 py-2 bg-blue rounded-md font-bold text-xs sm:text-sm md:text-lg">
-                Connect wallet
-            </button>
+            <Button />
         </div>
     )
 }
