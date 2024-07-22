@@ -1,5 +1,3 @@
-'use client'
-
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { copy } from '@/utils/app/copy'
@@ -13,7 +11,7 @@ export default function AddressBar({ walletAddress }: AddressBarProps) {
     const [copied, setCopied] = useState(false)
     const router = useRouter()
     return (
-        <div className="flex flex-col items-left w-full gap-1 font-bold text-lg py-2 px-4 sm:px-9 border-b border-blue">
+        <div className="flex flex-col items-left w-full gap-1 font-bold text-lg py-2 px-4 sm:px-9">
             <p>Address:</p>
             <div className="flex w-full items-center justify-between">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">

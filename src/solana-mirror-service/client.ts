@@ -1,8 +1,8 @@
 import SolanaMirror from 'solana-mirror'
 
-export const getTransactions = async (client: SolanaMirror, limit?: number) => {
+export const getTransactions = async (client: SolanaMirror, limit: number) => {
     const transactions = await client.getTransactions({
-        batchSize: limit || 10,
+        batchSize: limit,
         limit: limit,
     })
     return transactions

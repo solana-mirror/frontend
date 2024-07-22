@@ -175,7 +175,7 @@ export default function TransactionHistory({
             setAtas(_atasWithImages)
             setIsLoading(false)
 
-            const moreTxs = await getTransactions(client, 5)
+            const moreTxs = await getTransactions(client, 200)
             const formattedMoreTxs = formatTxsToProvideTheTable(
                 moreTxs,
                 _atasWithImages

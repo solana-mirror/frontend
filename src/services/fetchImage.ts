@@ -32,8 +32,8 @@ export async function fetchImages(atas: ParsedAta[]): Promise<ParsedAta[]> {
 
 function generateIcon(address: string) {
     const canvas = document.createElement('canvas')
-    canvas.width = 64
-    canvas.height = 64
+    canvas.width = 24
+    canvas.height = 24
     const ctx = canvas.getContext('2d')
 
     if (!ctx) return ''
@@ -41,7 +41,7 @@ function generateIcon(address: string) {
     ctx.fillStyle = '#b22222'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    ctx.font = 'semibold 32px Arial'
+    ctx.font = 'semibold 24px Arial'
     ctx.fillStyle = '#ffffff'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'

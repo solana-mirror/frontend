@@ -20,7 +20,7 @@ const Table = ({ data, columns }: TableProps) => {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 0,
-            pageSize: 8,
+            pageSize: 5,
         })
 
     const table = useReactTable({
@@ -60,7 +60,7 @@ const Table = ({ data, columns }: TableProps) => {
                         {table.getRowModel().rows.map((row) => (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id} className="py-3">
+                                    <td key={cell.id} className="py-3 px-2">
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()
@@ -78,7 +78,8 @@ const Table = ({ data, columns }: TableProps) => {
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                         className={cn(
-                            table.getPageCount() === 1 && 'opacity-50'
+                            table.getPageCount() === 1 ||
+                                (!table.getCanPreviousPage() && 'opacity-50')
                         )}
                     >
                         {'<<'}
@@ -87,7 +88,8 @@ const Table = ({ data, columns }: TableProps) => {
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                         className={cn(
-                            table.getPageCount() === 1 && 'opacity-50'
+                            table.getPageCount() === 1 ||
+                                (!table.getCanPreviousPage() && 'opacity-50')
                         )}
                     >
                         {'<'}
@@ -99,7 +101,8 @@ const Table = ({ data, columns }: TableProps) => {
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                         className={cn(
-                            table.getPageCount() === 1 && 'opacity-50'
+                            table.getPageCount() === 1 ||
+                                (!table.getCanNextPage() && 'opacity-50')
                         )}
                     >
                         {'>'}
@@ -110,7 +113,8 @@ const Table = ({ data, columns }: TableProps) => {
                         }
                         disabled={!table.getCanNextPage()}
                         className={cn(
-                            table.getPageCount() === 1 && 'opacity-50'
+                            table.getPageCount() === 1 ||
+                                (!table.getCanNextPage() && 'opacity-50')
                         )}
                     >
                         {'>>'}

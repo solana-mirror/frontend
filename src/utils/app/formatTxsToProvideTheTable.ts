@@ -28,6 +28,8 @@ export function formatTxsToProvideTheTable(
     for (const tx of txs) {
         const balances = tx.balances
 
+        console.log(tx.balances, new Date(tx.blockTime * 1000))
+
         const date = new Date(tx.blockTime * 1000).toLocaleString().split(' ')
         const txId = tx.signatures[0]
         let types: string[] = []
@@ -58,12 +60,15 @@ export function formatTxsToProvideTheTable(
                         name: atas[x].symbol,
                         mint: atas[x].mint,
                     })
-                } else if (change === 0) {
-                    types = ['swap']
                 }
 
                 if (incoming.length && outgoing.length) {
-                    types = tx.parsedInstructions.slice(0, 2)
+                    const swapInstruction = tx.parsedInstructions.find(
+                        (x) => x === 'Swap'
+                    )
+                    swapInstruction
+                        ? (types = [swapInstruction])
+                        : (types = tx.parsedInstructions.slice(0, 2))
                 }
             }
         }
