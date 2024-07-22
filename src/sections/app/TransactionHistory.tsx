@@ -1,17 +1,17 @@
-import { getAtas, getTransactions } from '@/solana-mirror-service/client'
 import {
-    formatTxsToProvideTheTable,
     FormattedTx,
     TokenTransactedDisplay,
-} from '@/utils/app/formatTxsToProvideTheTable'
+    formatTableTxs,
+} from '@/utils/formatTableTxs'
+
 import { useEffect, useState } from 'react'
 import SolanaMirror, { ParsedAta } from 'solana-mirror'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import Image from 'next/image'
-import { formatAddress } from '@/utils/app/formatAddress'
 import Table from '@/components/Table'
 import { fetchImages } from '@/services/fetchImage'
+import { formatAddress } from '@/utils'
 
 type TransactionHistoryProps = {
     client: SolanaMirror
@@ -68,8 +68,8 @@ const columns: ColumnDef<FormattedTx>[] = [
                     <Image
                         src={`/${value[0]}Arrow.svg`}
                         alt={`${value[0]} arrow`}
-                        width={20}
-                        height={20}
+                        width={18}
+                        height={18}
                         className="min-w-5"
                     />
                     {value[0]}
@@ -84,29 +84,33 @@ const columns: ColumnDef<FormattedTx>[] = [
             const value = getValue() as TokenTransactedDisplay[]
             return (
                 <div className="flex flex-col gap-1 mr-1">
-                    {value.map((bal, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center gap-1 sm:whitespace-nowrap"
-                        >
-                            <Image
-                                src={bal.photo}
-                                alt={`image`}
-                                width={32}
-                                height={32}
-                                className="rounded-full min-w-8"
-                            />
-                            <p>{bal.amount.toFixed(2)}</p>
-                            <Link
-                                href={`https://solscan.io/token/${bal.mint}`}
-                                className="text-blue underline hover:opacity-70"
+                    {value.length ? (
+                        value.map((bal, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center gap-1 sm:whitespace-nowrap"
                             >
-                                {bal.name
-                                    ? bal.name
-                                    : formatAddress(bal.mint.toString(), 4)}
-                            </Link>
-                        </div>
-                    ))}
+                                <Image
+                                    src={bal.photo}
+                                    alt={`image`}
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full min-w-8"
+                                />
+                                <p>{bal.amount.toFixed(2)}</p>
+                                <Link
+                                    href={`https://solscan.io/token/${bal.mint}`}
+                                    className="text-blue underline hover:opacity-70"
+                                >
+                                    {bal.name
+                                        ? bal.name
+                                        : formatAddress(bal.mint.toString(), 4)}
+                                </Link>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-opacity-50">-</p>
+                    )}
                 </div>
             )
         },
@@ -118,29 +122,33 @@ const columns: ColumnDef<FormattedTx>[] = [
             const value = getValue() as TokenTransactedDisplay[]
             return (
                 <div className="flex flex-col gap-1 mr-1">
-                    {value.map((bal, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center gap-1 sm:whitespace-nowrap"
-                        >
-                            <Image
-                                src={bal.photo}
-                                alt={`image`}
-                                width={32}
-                                height={32}
-                                className="rounded-full min-w-8"
-                            />
-                            <p>{bal.amount.toFixed(2)}</p>
-                            <Link
-                                href={`https://solscan.io/token/${bal.mint}`}
-                                className="text-blue underline hover:opacity-70"
+                    {value.length ? (
+                        value.map((bal, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center gap-1 sm:whitespace-nowrap"
                             >
-                                {bal.name
-                                    ? bal.name
-                                    : formatAddress(bal.mint.toString(), 4)}
-                            </Link>
-                        </div>
-                    ))}
+                                <Image
+                                    src={bal.photo}
+                                    alt={`image`}
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full min-w-8"
+                                />
+                                <p>{bal.amount.toFixed(2)}</p>
+                                <Link
+                                    href={`https://solscan.io/token/${bal.mint}`}
+                                    className="text-blue underline hover:opacity-70"
+                                >
+                                    {bal.name
+                                        ? bal.name
+                                        : formatAddress(bal.mint.toString(), 4)}
+                                </Link>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-opacity-50">-</p>
+                    )}
                 </div>
             )
         },
@@ -161,25 +169,25 @@ export default function TransactionHistory({
 
         async function getData() {
             setIsLoading(true)
-            const _txs = await getTransactions(client, 5)
-            const _atas = await getAtas(client)
+            const limit = 5
 
+            const _txs = await client.getTransactions({
+                batchSize: limit,
+                limit,
+            })
+            const _atas = await client.getTokenAccounts()
             const _atasWithImages = await fetchImages(_atas)
-
-            const formattedTxs = formatTxsToProvideTheTable(
-                _txs,
-                _atasWithImages
-            )
+            const formattedTxs = formatTableTxs(_txs, _atasWithImages)
 
             setTxs(formattedTxs)
             setAtas(_atasWithImages)
             setIsLoading(false)
 
-            const moreTxs = await getTransactions(client, 200)
-            const formattedMoreTxs = formatTxsToProvideTheTable(
-                moreTxs,
-                _atasWithImages
-            )
+            const moreTxs = await client.getTransactions({
+                batchSize: limit,
+                limit,
+            })
+            const formattedMoreTxs = formatTableTxs(moreTxs, _atasWithImages)
             setTxs(formattedMoreTxs)
         }
 

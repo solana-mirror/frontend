@@ -5,17 +5,31 @@ export async function fetchImages(atas: ParsedAta[]): Promise<ParsedAta[]> {
 
     const fetchPromises = updatedAtas.map(async (ata) => {
         if (ata.image) {
-            const response = await fetch(`/api/images`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ url: ata.image }),
-            })
+            try {
+                // handle RCL case getting Error: self-signed certificate in certificate chain
+                if (
+                    ata.mint.toString() ===
+                    'Ckk9iLjEtwhAjA8RVTgNoH5fH4LJvsH4NAvimu4DpBWX' // RCL mint
+                ) {
+                    ata.image =
+                        'https://ipfs.io/ipfs/Qme9ErqmQaznzpfDACncEW48NyXJPFP7HgzfoNdto9xQ9P/02.jpg'
+                } else {
+                    const response = await fetch(`/api/images`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ url: ata.image }),
+                    })
 
-            const data = await response.json()
-
-            ata.image = data.image
+                    const resText = await response.text()
+                    let data = JSON.parse(resText)
+                    ata.image = data.image
+                }
+            } catch (error) {
+                console.error('Error fetching image:', error, ata.image)
+                ata.image = generateIcon(ata.mint.toString())
+            }
         }
         if (ata.coingeckoId === 'wrapped-solana') {
             ata.image = '/Solana.svg'

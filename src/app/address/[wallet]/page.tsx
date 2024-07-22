@@ -1,10 +1,10 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { NavBar } from '@/components/navbar/NavBar'
 import { PublicKey } from '@solana/web3.js'
 import SolanaMirror from 'solana-mirror'
-import ValidAddress from '@/sections/ValidAddress'
+import { NavBar } from '@/components/Navbar'
+import ValidAddress from '@/sections/app'
 
 export default function Transactions() {
     const params = useParams()
@@ -14,10 +14,10 @@ export default function Transactions() {
     let client
     const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
 
-    if (new PublicKey(walletAddress.toString())) {
+    try {
         watch = new PublicKey(walletAddress.toString())
         client = new SolanaMirror({ watch, rpc })
-    } else {
+    } catch {
         console.error('Invalid public key input')
     }
 

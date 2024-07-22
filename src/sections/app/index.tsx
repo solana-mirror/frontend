@@ -1,8 +1,8 @@
 import SolanaMirror from 'solana-mirror'
 import AddressBar from './AddressBar'
-import Chart from './app/Chart'
-import Balances from './app/Balances'
-import TransactionHistory from './app/TransactionHistory'
+import Balances from './Balances'
+import Chart from './Chart'
+import TransactionHistory from './TransactionHistory'
 
 type ValidAddressProps = {
     client: SolanaMirror

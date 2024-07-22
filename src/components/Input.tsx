@@ -1,4 +1,4 @@
-import { cn } from '@/utils/style/cn'
+import { cn } from '@/utils'
 import { RefObject } from 'react'
 
 type InputPros = {

@@ -12,10 +12,10 @@ const config: Config = {
             colors: {
                 background: '#1A1C1D',
                 foreground: '#EDEDED',
-                blue: '#7BA0C3',
+                blue: '#87B7E2',
                 placeholder: '#585858',
-                input: '#24292E',
-                type_bg: '#272B2F',
+                input: '#222B32',
+                type_bg: '#25323B',
             },
         },
     },

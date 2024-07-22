@@ -17,18 +17,16 @@ export type FormattedTx = {
     incoming: TokenTransactedDisplay[]
 }
 
-export function formatTxsToProvideTheTable(
+export function formatTableTxs(
     txs: ParsedTransaction[],
     atas: ParsedAta[]
 ): FormattedTx[] {
     const formattedTxs: FormattedTx[] = []
 
-    const sortedTxsByTime = txs.sort((a, b) => b.blockTime - a.blockTime)
+    txs.sort((a, b) => b.blockTime - a.blockTime)
 
     for (const tx of txs) {
         const balances = tx.balances
-
-        console.log(tx.balances, new Date(tx.blockTime * 1000))
 
         const date = new Date(tx.blockTime * 1000).toLocaleString().split(' ')
         const txId = tx.signatures[0]
@@ -83,6 +81,8 @@ export function formatTxsToProvideTheTable(
 
         formattedTxs.push(formattedTx)
     }
+
+    console.log(formattedTxs)
 
     return formattedTxs
 }

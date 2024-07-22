@@ -8,8 +8,8 @@ import {
     ColumnDef,
     PaginationState,
 } from '@tanstack/react-table'
-import { FormattedTx } from '@/utils/app/formatTxsToProvideTheTable'
-import { cn } from '@/utils/style/cn'
+import { cn } from '@/utils'
+import { FormattedTx } from '@/utils/formatTableTxs'
 
 type TableProps = {
     data: FormattedTx[]
@@ -60,7 +60,7 @@ const Table = ({ data, columns }: TableProps) => {
                         {table.getRowModel().rows.map((row) => (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id} className="py-3 px-2">
+                                    <td key={cell.id} className="py-3">
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()
@@ -78,8 +78,7 @@ const Table = ({ data, columns }: TableProps) => {
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                         className={cn(
-                            table.getPageCount() === 1 ||
-                                (!table.getCanPreviousPage() && 'opacity-50')
+                            !table.getCanPreviousPage() && 'opacity-50'
                         )}
                     >
                         {'<<'}
@@ -88,8 +87,7 @@ const Table = ({ data, columns }: TableProps) => {
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                         className={cn(
-                            table.getPageCount() === 1 ||
-                                (!table.getCanPreviousPage() && 'opacity-50')
+                            !table.getCanPreviousPage() && 'opacity-50'
                         )}
                     >
                         {'<'}
@@ -100,10 +98,7 @@ const Table = ({ data, columns }: TableProps) => {
                     <button
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
-                        className={cn(
-                            table.getPageCount() === 1 ||
-                                (!table.getCanNextPage() && 'opacity-50')
-                        )}
+                        className={cn(!table.getCanNextPage() && 'opacity-50')}
                     >
                         {'>'}
                     </button>
@@ -112,10 +107,7 @@ const Table = ({ data, columns }: TableProps) => {
                             table.setPageIndex(table.getPageCount() - 1)
                         }
                         disabled={!table.getCanNextPage()}
-                        className={cn(
-                            table.getPageCount() === 1 ||
-                                (!table.getCanNextPage() && 'opacity-50')
-                        )}
+                        className={cn(!table.getCanNextPage() && 'opacity-50')}
                     >
                         {'>>'}
                     </button>

@@ -1,7 +1,7 @@
 import { SearchInput } from '../SearchInput'
 import { Button } from '../Button'
 import Link from 'next/link'
-import { cn } from '@/utils/style/cn'
+import { cn } from '@/utils'
 
 type NavBarProps = {
     isAddress: boolean
