@@ -15,6 +15,7 @@ const config: Config = {
                 blue: '#7BA0C3',
                 placeholder: '#585858',
                 input: '#24292E',
+                type_bg: '#272B2F',
             },
         },
     },

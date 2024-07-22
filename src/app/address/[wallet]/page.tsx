@@ -22,9 +22,9 @@ export default function Transactions() {
     }
 
     return (
-        <div className="h-screen flex flex-col justify-center items-center">
+        <div className="h-screen flex flex-col">
             <NavBar isAddress={true} />
-            <div className="flex flex-col items-center justify-center w-full h-full">
+            <div className="flex-grow overflow-y-auto no-scrollbar">
                 {client ? (
                     <ValidAddress
                         client={client}

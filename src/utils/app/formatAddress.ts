@@ -1,5 +1,3 @@
-export const formatAddress = (address: string, position?: string) => {
-    if (position === 'navbar' || !position) {
-        return `${address.slice(0, 10)}...${address.slice(-10)}`
-    } else return address
+export function formatAddress(address: string, chars: number) {
+    return `${address.slice(0, chars)}...${address.slice(-chars)}`
 }

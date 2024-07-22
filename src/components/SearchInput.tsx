@@ -75,6 +75,7 @@ export const SearchInput = ({ position }: SearchInputProps) => {
                                 <p>
                                     {formatAddress(
                                         address.toString(),
+                                        10,
                                         position
                                     )}
                                 </p>
