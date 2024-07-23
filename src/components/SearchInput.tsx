@@ -48,7 +48,7 @@ export const SearchInput = ({ position }: SearchInputProps) => {
                 inputRef={inputRef}
                 placeholder="Search Account"
                 shortcut="Cmd+K"
-                size={cn(position === 'navbar' && 'max-h-[40px]')}
+                size={position === 'navbar' && 'sm'}
                 onChange={(address) => {
                     setAddress(handleSearchAccInputChange(address).address)
                     setInvalidAddress(
@@ -58,7 +58,7 @@ export const SearchInput = ({ position }: SearchInputProps) => {
             />
             <div className="mt-2 w-full absolute">
                 {address && (
-                    <div className="flex gap-2 py-4 px-6 bg-input rounded-md font-bold text-sm">
+                    <div className="flex gap-2 py-4 px-6 bg-primary rounded-md font-bold text-sm">
                         {invalidAddress ? (
                             <p>Not found</p>
                         ) : (

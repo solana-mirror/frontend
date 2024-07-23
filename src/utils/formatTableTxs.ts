@@ -34,6 +34,11 @@ export function formatTableTxs(
         let outgoing: TokenTransactedDisplay[] = []
         let incoming: TokenTransactedDisplay[] = []
 
+        // handle no balances (it will not be included in the following loop)
+        if (Object.keys(balances).length === 0) {
+            types = tx.parsedInstructions.slice(0, 2)
+        }
+
         for (const [key, balance] of Object.entries(balances)) {
             for (let x = 0; x < atas.length; x++) {
                 if (fromWeb3JsPublicKey(atas[x].mint) !== key) {
@@ -42,16 +47,18 @@ export function formatTableTxs(
 
                 const change = balance.post.formatted - balance.pre.formatted
 
-                if (change >= 0) {
-                    types = ['receive']
+                if (change > 0) {
+                    types = ['Receive']
                     incoming.push({
                         photo: atas[x].image,
                         amount: change,
                         name: atas[x].symbol,
                         mint: atas[x].mint,
                     })
-                } else if (change <= 0) {
-                    types = ['send']
+                }
+
+                if (change < 0) {
+                    types = ['Send']
                     outgoing.push({
                         photo: atas[x].image,
                         amount: -change,
@@ -60,6 +67,7 @@ export function formatTableTxs(
                     })
                 }
 
+                // handle swap or liquidity pool movement
                 if (incoming.length && outgoing.length) {
                     const swapInstruction = tx.parsedInstructions.find(
                         (x) => x === 'Swap'
@@ -71,18 +79,14 @@ export function formatTableTxs(
             }
         }
 
-        const formattedTx: FormattedTx = {
+        formattedTxs.push({
             date,
             txId,
             types,
             outgoing,
             incoming,
-        }
-
-        formattedTxs.push(formattedTx)
+        })
     }
-
-    console.log(formattedTxs)
 
     return formattedTxs
 }

@@ -9,14 +9,13 @@ import {
     PaginationState,
 } from '@tanstack/react-table'
 import { cn } from '@/utils'
-import { FormattedTx } from '@/utils/formatTableTxs'
 
-type TableProps = {
-    data: FormattedTx[]
-    columns: ColumnDef<FormattedTx>[]
+type TableProps<T> = {
+    data: T[]
+    columns: ColumnDef<T, any>[]
 }
 
-const Table = ({ data, columns }: TableProps) => {
+export default function Table<T>({ data, columns }: TableProps<T>) {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 0,
@@ -73,7 +72,7 @@ const Table = ({ data, columns }: TableProps) => {
                 </table>
             </div>
             <div className="flex justify-center">
-                <div className="flex gap-2 w-fit px-2 py-1 rounded-md bg-type_bg">
+                <div className="flex gap-2 w-fit px-2 py-1 rounded-md bg-secondary">
                     <button
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
@@ -116,5 +115,3 @@ const Table = ({ data, columns }: TableProps) => {
         </div>
     )
 }
-
-export default Table

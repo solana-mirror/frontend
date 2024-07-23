@@ -5,7 +5,7 @@ type InputPros = {
     inputRef: RefObject<HTMLInputElement>
     placeholder: string
     shortcut: string
-    size: string
+    size: 'sm' | false
     onChange: (e: string) => void
 }
 
@@ -16,13 +16,14 @@ const Input = ({
     size,
     onChange,
 }: InputPros) => {
+    const classes = {
+        common: 'flex gap-2 py-4 px-6 items-center bg-primary rounded-md font-bold text-sm',
+        sizes: {
+            sm: 'max-h-[40px]',
+        },
+    }
     return (
-        <div
-            className={cn(
-                'flex gap-2 py-4 px-6 items-center bg-input rounded-md font-bold text-sm ',
-                size
-            )}
-        >
+        <div className={cn(classes.common, size && classes.sizes[size])}>
             <input
                 ref={inputRef}
                 type="text"
@@ -32,7 +33,7 @@ const Input = ({
             />
             <p
                 className={cn(
-                    'text-placeholder text-right',
+                    'text-right',
                     inputRef.current?.value && 'invisible'
                 )}
             >

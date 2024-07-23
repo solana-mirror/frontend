@@ -8,7 +8,7 @@ export default function Home() {
             <div className="flex px-10 flex-col items-center justify-center w-full h-full">
                 <div className="flex flex-col items-center gap-9">
                     <div className=" flex flex-col gap-3 max-w-[560px]">
-                        <div className="font-bold text-4xl md:text-5xl text-blue text-center">
+                        <div className="font-bold text-4xl md:text-5xl text-accent text-center">
                             Check your Solana account at a glance
                         </div>
                         <div className="font-bold text-base md:text-lg text-center">

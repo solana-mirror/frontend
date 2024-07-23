@@ -10,12 +10,11 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                background: '#1A1C1D',
-                foreground: '#EDEDED',
-                blue: '#87B7E2',
-                placeholder: '#585858',
-                input: '#222B32',
-                type_bg: '#25323B',
+                background: '#1F2427', // app background
+                foreground: '#FFFFFF', // white text color
+                accent: '#87B7E2', // lightblue
+                primary: '#222B32', // contrast with background
+                secondary: '#25323B', // secondary contrast
             },
         },
     },
