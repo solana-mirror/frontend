@@ -1,16 +1,15 @@
 import { FormattedTx, formatTableTxs } from '@/utils/formatTableTxs'
-
 import { useEffect, useState } from 'react'
 import SolanaMirror, { ParsedAta } from 'solana-mirror'
 import { createColumnHelper } from '@tanstack/react-table'
-import Link from 'next/link'
 import Image from 'next/image'
 import Table from '@/components/Table'
-import { fetchImages } from '@/services/fetchImage'
 import { formatAddress } from '@/utils'
+import { Hyperlink } from '@/components/Hyperlink'
 
 type TransactionHistoryProps = {
     client: SolanaMirror
+    atas: ParsedAta[]
 }
 
 const columnHelper = createColumnHelper<FormattedTx>()
@@ -25,7 +24,7 @@ const columns = [
             cell: (info) => {
                 const { year, hour } = info.getValue()
                 return (
-                    <div className="flex flex-col mr-1">
+                    <div className="flex flex-col">
                         <p>{year}</p>
                         <p>{hour}</p>
                     </div>
@@ -42,12 +41,10 @@ const columns = [
             cell: (info) => {
                 const { txId } = info.getValue()
                 return (
-                    <Link
-                        className="text-accent underline hover:opacity-70 mr-1"
+                    <Hyperlink
+                        children={formatAddress(txId, 4)}
                         href={`https://solscan.io/tx/${txId}`}
-                    >
-                        {formatAddress(txId, 4)}
-                    </Link>
+                    />
                 )
             },
         }
@@ -61,7 +58,7 @@ const columns = [
             cell: (info) => {
                 const { types } = info.getValue()
                 return types.length !== 1 ? (
-                    <div className="flex flex-col gap-1 mr-1 text-xs xl:text-sm">
+                    <div className="flex flex-col gap-1 text-xs xl:text-sm">
                         {types.map((type, i) => (
                             <div
                                 className="bg-secondary w-fit py-1 px-2 rounded-md"
@@ -72,7 +69,7 @@ const columns = [
                         ))}
                     </div>
                 ) : (
-                    <div className="flex items-center gap-2 mr-1">
+                    <div className="flex items-center gap-2">
                         <Image
                             src={`/${types[0]}Arrow.svg`}
                             alt={`${types[0]} arrow`}
@@ -95,7 +92,7 @@ const columns = [
             cell: (info) => {
                 const { outgoing } = info.getValue()
                 return (
-                    <div className="flex flex-col gap-1 mr-1">
+                    <div className="flex flex-col gap-1">
                         {outgoing.length ? (
                             outgoing.map((bal, index) => (
                                 <div
@@ -105,9 +102,9 @@ const columns = [
                                     <Image
                                         src={bal.photo}
                                         alt={`image`}
-                                        width={32}
-                                        height={32}
-                                        className="rounded-full min-w-8"
+                                        width={24}
+                                        height={24}
+                                        className="rounded-full min-w-6 min-h-6"
                                     />
                                     <div>
                                         {bal.amount
@@ -124,17 +121,17 @@ const columns = [
                                             bal.amount.toFixed(2)
                                         )}
                                     </div>
-                                    <Link
+                                    <Hyperlink
+                                        children={
+                                            bal.name
+                                                ? bal.name
+                                                : formatAddress(
+                                                      bal.mint.toString(),
+                                                      4
+                                                  )
+                                        }
                                         href={`https://solscan.io/token/${bal.mint}`}
-                                        className="text-accent underline hover:opacity-70"
-                                    >
-                                        {bal.name
-                                            ? bal.name
-                                            : formatAddress(
-                                                  bal.mint.toString(),
-                                                  4
-                                              )}
-                                    </Link>
+                                    />
                                 </div>
                             ))
                         ) : (
@@ -154,7 +151,7 @@ const columns = [
             cell: (info) => {
                 const { incoming } = info.getValue()
                 return (
-                    <div className="flex flex-col gap-1 mr-1">
+                    <div className="flex flex-col gap-1">
                         {incoming.length ? (
                             incoming.map((bal, index) => (
                                 <div
@@ -164,15 +161,15 @@ const columns = [
                                     <Image
                                         src={bal.photo}
                                         alt={`image`}
-                                        width={32}
-                                        height={32}
-                                        className="rounded-full min-w-8"
+                                        width={24}
+                                        height={24}
+                                        className="rounded-full min-w-6 min-h-6"
                                     />
                                     <div>
                                         {bal.amount
                                             .toString()
                                             .split('')
-                                            // handle some e^-7 or less to display it accordingly
+                                            // handle some e^-7 or similar to display it accordingly
                                             .find((x) => x === 'e') ? (
                                             <p className="text-sm">
                                                 {bal.amount
@@ -183,17 +180,17 @@ const columns = [
                                             bal.amount.toFixed(2)
                                         )}
                                     </div>
-                                    <Link
+                                    <Hyperlink
+                                        children={
+                                            bal.name
+                                                ? bal.name
+                                                : formatAddress(
+                                                      bal.mint.toString(),
+                                                      4
+                                                  )
+                                        }
                                         href={`https://solscan.io/token/${bal.mint}`}
-                                        className="text-accent underline hover:opacity-70"
-                                    >
-                                        {bal.name
-                                            ? bal.name
-                                            : formatAddress(
-                                                  bal.mint.toString(),
-                                                  4
-                                              )}
-                                    </Link>
+                                    />
                                 </div>
                             ))
                         ) : (
@@ -208,31 +205,26 @@ const columns = [
 
 export default function TransactionHistory({
     client,
+    atas,
 }: TransactionHistoryProps) {
     const [txs, setTxs] = useState<FormattedTx[]>([])
-    const [atas, setAtas] = useState<ParsedAta[]>()
-    const [isLoading, setIsLoading] = useState<boolean>()
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>()
 
     useEffect(() => {
-        if (txs.length) {
+        if (txs.length || !atas.length) {
             return
         }
 
         async function getData() {
-            setIsLoading(true)
             const limit = 10
 
             const _txs = await client.getTransactions({
                 batchSize: limit,
                 limit,
             })
-            const _atas = await client.getTokenAccounts()
-            const _atasWithImages = await fetchImages(_atas)
-            const formattedTxs = formatTableTxs(_txs, _atasWithImages)
-
+            const formattedTxs = formatTableTxs(_txs, atas)
             setTxs(formattedTxs)
-            setAtas(_atasWithImages)
             setIsLoading(false)
 
             setIsLoadingMore(true)
@@ -240,13 +232,13 @@ export default function TransactionHistory({
                 batchSize: limit,
                 limit,
             })
-            const formattedMoreTxs = formatTableTxs(moreTxs, _atasWithImages)
+            const formattedMoreTxs = formatTableTxs(moreTxs, atas)
             setTxs(formattedMoreTxs)
             setIsLoadingMore(false)
         }
 
         getData()
-    }, [client])
+    }, [client, atas])
 
     return (
         <div className="w-full h-full md:w-1/2 flex flex-col gap-6 font-semibold p-6">

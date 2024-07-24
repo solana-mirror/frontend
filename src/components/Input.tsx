@@ -9,7 +9,7 @@ type InputPros = {
     onChange: (e: string) => void
 }
 
-const Input = ({
+export const Input = ({
     inputRef,
     placeholder,
     shortcut,
@@ -42,5 +42,3 @@ const Input = ({
         </div>
     )
 }
-
-export default Input

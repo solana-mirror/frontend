@@ -3,7 +3,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import Input from './Input'
+import { Input } from './Input'
 import { cn, formatAddress, handleSearchAccInputChange } from '@/utils'
 
 type SearchInputProps = {
