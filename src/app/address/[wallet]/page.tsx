@@ -1,22 +1,26 @@
-'use client'
-
-import { useParams } from 'next/navigation'
 import { PublicKey } from '@solana/web3.js'
-import SolanaMirror from 'solana-mirror'
 import { NavBar } from '@/components/Navbar'
-import ValidAddress from '@/sections/app'
+import AddressBar from '@/sections/app/AddressBar'
+import Balances from '@/sections/app/Balances'
 
-export default function Transactions() {
-    const params = useParams()
+import TransactionHistory from '@/sections/app/TransactionHistory'
+import { Suspense } from 'react'
+import React from 'react'
+const Chart = React.lazy(() => import('@/sections/app/Chart'))
+
+type Props = {
+    params: {
+        wallet: string
+    }
+}
+
+export default function App({ params }: Props) {
     const walletAddress = params.wallet
 
     let watch
-    let client
-    const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
 
     try {
         watch = new PublicKey(walletAddress.toString())
-        client = new SolanaMirror({ watch, rpc })
     } catch {
         console.error('Invalid public key input')
     }
@@ -25,11 +29,26 @@ export default function Transactions() {
         <div className="h-screen flex flex-col">
             <NavBar isAddress={true} />
             <div className="flex-grow overflow-y-auto no-scrollbar">
-                {client ? (
-                    <ValidAddress
-                        client={client}
-                        walletAddress={walletAddress}
-                    />
+                {watch ? (
+                    <div className="h-full flex flex-col">
+                        <AddressBar walletAddress={walletAddress} />
+                        <div className="flex flex-grow flex-col md:flex-row">
+                            <div className="w-full md:w-1/2 flex flex-col">
+                                <Suspense
+                                    fallback={
+                                        <div className="w-full flex items-center justify-center border md:h-1/2">
+                                            Loading...
+                                        </div>
+                                    }
+                                >
+                                    <Chart walletAddress={walletAddress} />
+                                </Suspense>
+
+                                <Balances walletAddress={walletAddress} />
+                            </div>
+                            <TransactionHistory />
+                        </div>
+                    </div>
                 ) : (
                     <p className="text-center font-bold text-2xl">
                         Unable to find account {walletAddress}

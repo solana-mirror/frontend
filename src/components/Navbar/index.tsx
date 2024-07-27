@@ -26,11 +26,12 @@ export const NavBar = ({ isAddress }: NavBarProps) => {
             {isAddress && <SearchInput position={'navbar'} />}
 
             <Button
-                children={'Connect Wallet'}
                 onClick={() => handleConnectWallet()}
                 size={'md'}
                 color={'accent'}
-            />
+            >
+                Connect Wallet
+            </Button>
         </div>
     )
 }

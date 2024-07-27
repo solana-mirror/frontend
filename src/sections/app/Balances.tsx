@@ -1,23 +1,54 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import SolanaMirror, { ParsedAta } from 'solana-mirror'
+import SolanaMirror from 'solana-mirror'
 import Image from 'next/image'
 import { Hyperlink } from '@/components/Hyperlink'
+import { useAppDispatch, useAppSelector } from '@/state/store'
+import { selectAtas, selectClient } from '@/state/user/selector'
+import { fetchAtas } from '@/state/user/thunk'
+import { setClient } from '@/state/user/reducer'
+import { PublicKey } from '@solana/web3.js'
 
 type BalancesProps = {
-    client: SolanaMirror
-    atas: ParsedAta[]
+    walletAddress: string
 }
 
-export default function Balances({ client, atas }: BalancesProps) {
+export default function Balances({ walletAddress }: BalancesProps) {
     const [netWorth, setNetWorth] = useState<number>()
 
+    const dispatch = useAppDispatch()
+
+    const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
+
+    const client = useAppSelector(selectClient)
+    const atas = useAppSelector(selectAtas)
+        .filter((x) => x.balance.formatted !== 0)
+        .sort(
+            (a, b) =>
+                b.balance.formatted * b.price - a.balance.formatted * a.price
+        ) // only tokens with balance !== 0 and sorted from highest to lowest balance
+
+    async function _getNetWorth() {
+        const _netWorth = await client?.getNetWorth()
+        setNetWorth(_netWorth)
+    }
+
     useEffect(() => {
-        async function getData() {
-            const _netWorth = await client.getNetWorth()
-            setNetWorth(_netWorth)
+        if (client) {
+            _getNetWorth()
+            return
         }
-        getData()
-    }, [client])
+        dispatch(
+            setClient(
+                new SolanaMirror({
+                    watch: new PublicKey(walletAddress),
+                    rpc,
+                })
+            )
+        )
+        dispatch(fetchAtas({}))
+    }, [client, dispatch, rpc, walletAddress])
 
     return (
         <div className="flex-grow text-center p-4 font-bold md:h-1/2">
@@ -42,9 +73,10 @@ export default function Balances({ client, atas }: BalancesProps) {
                                 className="rounded-full h-6 w-6"
                             />
                             <Hyperlink
-                                children={ata.name}
                                 href={`https://solscan.io/token/${ata.mint}`}
-                            />
+                            >
+                                {ata.name}
+                            </Hyperlink>
                         </div>
                         <div className="text-right">
                             <p>

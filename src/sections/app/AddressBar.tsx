@@ -1,3 +1,5 @@
+'use client'
+
 import { copy } from '@/utils'
 import Image from 'next/image'
 import { useState } from 'react'

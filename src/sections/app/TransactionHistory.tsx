@@ -1,16 +1,14 @@
+'use client'
+
 import { FormattedTx, formatTableTxs } from '@/utils/formatTableTxs'
 import { useEffect, useState } from 'react'
-import SolanaMirror, { ParsedAta } from 'solana-mirror'
 import { createColumnHelper } from '@tanstack/react-table'
 import Image from 'next/image'
 import Table from '@/components/Table'
 import { formatAddress } from '@/utils'
 import { Hyperlink } from '@/components/Hyperlink'
-
-type TransactionHistoryProps = {
-    client: SolanaMirror
-    atas: ParsedAta[]
-}
+import { useAppSelector } from '@/state/store'
+import { selectClient, selectAtas } from '@/state/user/reducer'
 
 const columnHelper = createColumnHelper<FormattedTx>()
 
@@ -41,10 +39,9 @@ const columns = [
             cell: (info) => {
                 const { txId } = info.getValue()
                 return (
-                    <Hyperlink
-                        children={formatAddress(txId, 4)}
-                        href={`https://solscan.io/tx/${txId}`}
-                    />
+                    <Hyperlink href={`https://solscan.io/tx/${txId}`}>
+                        {formatAddress(txId, 4)}
+                    </Hyperlink>
                 )
             },
         }
@@ -122,16 +119,15 @@ const columns = [
                                         )}
                                     </div>
                                     <Hyperlink
-                                        children={
-                                            bal.name
-                                                ? bal.name
-                                                : formatAddress(
-                                                      bal.mint.toString(),
-                                                      4
-                                                  )
-                                        }
                                         href={`https://solscan.io/token/${bal.mint}`}
-                                    />
+                                    >
+                                        {bal.name
+                                            ? bal.name
+                                            : formatAddress(
+                                                  bal.mint.toString(),
+                                                  4
+                                              )}
+                                    </Hyperlink>
                                 </div>
                             ))
                         ) : (
@@ -181,16 +177,15 @@ const columns = [
                                         )}
                                     </div>
                                     <Hyperlink
-                                        children={
-                                            bal.name
-                                                ? bal.name
-                                                : formatAddress(
-                                                      bal.mint.toString(),
-                                                      4
-                                                  )
-                                        }
                                         href={`https://solscan.io/token/${bal.mint}`}
-                                    />
+                                    >
+                                        {bal.name
+                                            ? bal.name
+                                            : formatAddress(
+                                                  bal.mint.toString(),
+                                                  4
+                                              )}
+                                    </Hyperlink>
                                 </div>
                             ))
                         ) : (
@@ -203,13 +198,18 @@ const columns = [
     ),
 ]
 
-export default function TransactionHistory({
-    client,
-    atas,
-}: TransactionHistoryProps) {
+export default function TransactionHistory() {
     const [txs, setTxs] = useState<FormattedTx[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>()
+
+    const client = useAppSelector(selectClient)
+    const atas = useAppSelector(selectAtas)
+        .filter((x) => x.balance.formatted !== 0)
+        .sort(
+            (a, b) =>
+                b.balance.formatted * b.price - a.balance.formatted * a.price
+        )
 
     useEffect(() => {
         if (txs.length || !atas.length) {
@@ -217,6 +217,9 @@ export default function TransactionHistory({
         }
 
         async function getData() {
+            if (!client) {
+                return
+            }
             const limit = 10
 
             const _txs = await client.getTransactions({
@@ -238,7 +241,7 @@ export default function TransactionHistory({
         }
 
         getData()
-    }, [client, atas])
+    }, [client, atas, txs.length])
 
     return (
         <div className="w-full h-full md:w-1/2 flex flex-col gap-6 font-semibold p-6">
