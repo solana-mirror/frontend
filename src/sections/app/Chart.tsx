@@ -19,7 +19,7 @@ export default async function Chart({ walletAddress }: ChartProps) {
     try {
         chartData = await client.getChartData({
             timeframe: 'D',
-            range: 14,
+            range: 30,
         })
     } catch (error) {
         console.error('Error fetching chart data:', error)
@@ -28,7 +28,7 @@ export default async function Chart({ walletAddress }: ChartProps) {
     return (
         <div className="w-full flex flex-col justify-between h-full md:h-1/2">
             <p className="text-2xl font-bold text-left pl-6 pt-6">Chart</p>
-            <EChart chartData={chartData} />
+            <EChart chartData={JSON.parse(JSON.stringify(chartData))} />
         </div>
     )
 }

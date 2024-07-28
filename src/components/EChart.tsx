@@ -58,7 +58,8 @@ export function EChart({ chartData }: EChartProps) {
                     showSymbol: false,
                     lineStyle: {
                         color: '#87B7E2',
-                        width: 3,
+                        width: 4,
+                        cap: 'round',
                     },
                 },
             ],

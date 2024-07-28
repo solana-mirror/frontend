@@ -1,4 +1,4 @@
 import { RootState } from '../store'
 
-export const selectClient = (state: RootState) => state.user.client
-export const selectAtas = (state: RootState) => state.user.atas
+export const selectClientValue = (state: RootState) => state.user.client
+export const selectAtasValue = (state: RootState) => state.user.atas

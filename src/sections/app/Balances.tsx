@@ -5,7 +5,7 @@ import SolanaMirror from 'solana-mirror'
 import Image from 'next/image'
 import { Hyperlink } from '@/components/Hyperlink'
 import { useAppDispatch, useAppSelector } from '@/state/store'
-import { selectAtas, selectClient } from '@/state/user/selector'
+import { selectAtasValue, selectClientValue } from '@/state/user/selector'
 import { fetchAtas } from '@/state/user/thunk'
 import { setClient } from '@/state/user/reducer'
 import { PublicKey } from '@solana/web3.js'
@@ -21,8 +21,8 @@ export default function Balances({ walletAddress }: BalancesProps) {
 
     const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
 
-    const client = useAppSelector(selectClient)
-    const atas = useAppSelector(selectAtas)
+    const client = useAppSelector(selectClientValue)
+    const atas = useAppSelector(selectAtasValue)
         .filter((x) => x.balance.formatted !== 0)
         .sort(
             (a, b) =>

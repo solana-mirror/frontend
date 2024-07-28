@@ -36,7 +36,7 @@ export default function App({ params }: Props) {
                             <div className="w-full md:w-1/2 flex flex-col">
                                 <Suspense
                                     fallback={
-                                        <div className="w-full flex items-center justify-center border md:h-1/2">
+                                        <div className="w-full flex items-center justify-center md:h-1/2">
                                             Loading...
                                         </div>
                                     }
