@@ -34,21 +34,24 @@ export default function Balances({ walletAddress }: BalancesProps) {
         setNetWorth(_netWorth)
     }
 
-    useEffect(() => {
-        if (client) {
-            _getNetWorth()
-            return
-        }
-        dispatch(
-            setClient(
-                new SolanaMirror({
-                    watch: new PublicKey(walletAddress),
-                    rpc,
-                })
+    useEffect(
+        () => {
+            if (client) {
+                _getNetWorth()
+                return
+            }
+            dispatch(
+                setClient(
+                    new SolanaMirror({
+                        watch: new PublicKey(walletAddress),
+                        rpc,
+                    })
+                )
             )
-        )
-        dispatch(fetchAtas({}))
-    }, [client, dispatch, rpc, walletAddress])
+            dispatch(fetchAtas({}))
+        }, // eslint-disable-next-line react-hooks/exhaustive-deps
+        [client, dispatch, rpc, walletAddress]
+    )
 
     return (
         <div className="flex-grow text-center p-4 font-bold md:h-1/2">
