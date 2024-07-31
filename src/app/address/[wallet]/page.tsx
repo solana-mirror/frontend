@@ -50,9 +50,11 @@ export default function App({ params }: Props) {
                         </div>
                     </div>
                 ) : (
-                    <p className="text-center font-bold text-2xl">
-                        Unable to find account {walletAddress}
-                    </p>
+                    <div className="flex items-center justify-center w-full h-full">
+                        <p className="text-center font-bold text-2xl">
+                            Unable to find account {walletAddress}
+                        </p>
+                    </div>
                 )}
             </div>
         </div>

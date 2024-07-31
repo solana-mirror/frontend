@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { Input } from './Input'
 import { cn, formatAddress, handleSearchAccInputChange } from '@/utils'
+import { useShortcut } from '@/hooks/useShortcut'
 
 type SearchInputProps = {
     position: 'navbar' | 'landing'
@@ -18,19 +19,9 @@ export const SearchInput = ({ position }: SearchInputProps) => {
     const [isPending, startTransition] = useTransition()
     const inputRef = useRef<HTMLInputElement>(null)
 
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.metaKey && e.key === 'k') {
-                e.preventDefault()
-                inputRef.current?.focus()
-            }
-        }
-
-        document.addEventListener('keydown', (e) => handleKeyDown(e))
-        return () => {
-            document.removeEventListener('keydown', (e) => handleKeyDown(e))
-        }
-    }, [])
+    useShortcut(() => {
+        inputRef.current?.focus()
+    }, ['cmd', 'k'])
 
     return (
         <>

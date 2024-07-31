@@ -69,7 +69,7 @@ export const NavBar = ({ isAddress }: NavBarProps) => {
     return (
         <div
             className={cn(
-                'w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9 border-b border-accent',
+                'w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9',
                 !isAddress && 'fixed'
             )}
         >

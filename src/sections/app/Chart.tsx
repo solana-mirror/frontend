@@ -26,9 +26,11 @@ export default async function Chart({ walletAddress }: ChartProps) {
     }
 
     return (
-        <div className="w-full flex flex-col justify-between h-full md:h-1/2">
-            <p className="text-2xl font-bold text-left pl-6 pt-6">Chart</p>
-            <EChart chartData={JSON.parse(JSON.stringify(chartData))} />
+        <div className="w-full flex flex-col h-full md:h-1/2 p-4">
+            <div className="flex flex-col gap-4 p-4 bg-primary rounded-md h-full">
+                <p className="text-2xl font-bold text-left">Chart</p>
+                <EChart chartData={JSON.parse(JSON.stringify(chartData))} />
+            </div>
         </div>
     )
 }

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { ChartDataWithPrice } from 'solana-mirror'
+import dayjs from 'dayjs'
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
 
@@ -13,6 +14,15 @@ type EChartProps = {
 export function EChart({ chartData }: EChartProps) {
     const [chartOptions, setChartOptions] = useState({})
 
+    const priceFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    })
+
+    const xAxisFormatter = (v: string) => {
+        return v.split(',')[0]
+    }
+
     useEffect(() => {
         if (!chartData) {
             return
@@ -22,21 +32,35 @@ export function EChart({ chartData }: EChartProps) {
         )
         const usdValues = chartData.map((x) => x.usdValue)
 
-        setChartOptions({
-            title: false,
+        const option = {
+            grid: {
+                left: 50,
+                top: 40,
+                right: 30,
+                bottom: 40,
+            },
             tooltip: {
                 trigger: 'axis',
-            },
-            grid: {
-                show: false,
+                extraCssText:
+                    'background-color: #1B1B21;border-width: 0px;color: #DFDEE7; display: flex;flex-direction: column;gap: 8px',
+                formatter: (params: any) => {
+                    const formattedData = priceFormatter.format(params[0].data)
+
+                    return `
+                  <div className="">${params[0].name}</div>
+                  <div>${params[0].seriesName}: ${formattedData}</div>
+                `
+                },
             },
             xAxis: {
                 type: 'category',
                 data: timestamps,
-                axisLine: {
-                    lineStyle: {
-                        color: '#87B7E2',
-                    },
+                boundaryGap: false,
+                axisLabel: {
+                    formatter: xAxisFormatter,
+                },
+                splitLine: {
+                    show: false,
                 },
             },
             yAxis: {
@@ -44,17 +68,13 @@ export function EChart({ chartData }: EChartProps) {
                 splitLine: {
                     show: false,
                 },
-                axisLine: {
-                    lineStyle: {
-                        color: '#87B7E2',
-                    },
-                },
             },
             series: [
                 {
                     name: 'USD Value',
-                    type: 'line',
                     data: usdValues,
+                    type: 'line',
+                    smooth: true,
                     showSymbol: false,
                     lineStyle: {
                         color: '#87B7E2',
@@ -63,7 +83,9 @@ export function EChart({ chartData }: EChartProps) {
                     },
                 },
             ],
-        })
+        }
+
+        setChartOptions(option)
     }, [chartData])
 
     return (
@@ -71,7 +93,12 @@ export function EChart({ chartData }: EChartProps) {
             {chartOptions && (
                 <ReactECharts
                     option={chartOptions}
-                    className="h-full md:h-fit"
+                    opts={{ renderer: 'svg' }}
+                    style={{
+                        height: '100%',
+                        width: '100%',
+                        minHeight: '256px',
+                    }}
                 />
             )}
         </>

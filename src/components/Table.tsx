@@ -13,9 +13,14 @@ import { cn } from '@/utils'
 type TableProps<T> = {
     data: T[]
     columns: ColumnDef<T, any>[]
+    minWidth?: number
 }
 
-export default function Table<T>({ data, columns }: TableProps<T>) {
+export default function Table<T>({
+    data,
+    columns,
+    minWidth = 800,
+}: TableProps<T>) {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 0,
@@ -37,7 +42,12 @@ export default function Table<T>({ data, columns }: TableProps<T>) {
     return (
         <div className="flex h-full w-full flex-col justify-between">
             <div className="overflow-x-auto no-scrollbar">
-                <table className="table-auto w-full">
+                <table
+                    className="table-auto w-full"
+                    style={{
+                        minWidth: `${minWidth}px`,
+                    }}
+                >
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
