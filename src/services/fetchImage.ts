@@ -2,43 +2,41 @@ import { ParsedAta } from 'solana-mirror'
 
 export async function fetchImages(atas: ParsedAta[]): Promise<ParsedAta[]> {
     const updatedAtas = [...atas]
-
+    console.log(atas)
     const fetchPromises = updatedAtas.map(async (ata) => {
         try {
-            if (
-                ata.mint.toString() ===
-                'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' // USDC mint
-            ) {
-                ata.image =
-                    'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=032'
-            } else if (
-                ata.mint.toString() ===
-                'Ckk9iLjEtwhAjA8RVTgNoH5fH4LJvsH4NAvimu4DpBWX' // RCL mint
-            ) {
-                ata.image =
-                    'https://ipfs.io/ipfs/Qme9ErqmQaznzpfDACncEW48NyXJPFP7HgzfoNdto9xQ9P/02.jpg'
-            } else if (
-                ata.mint.toString() ===
-                'So11111111111111111111111111111111111111112' // WSOL mint
-            ) {
-                ata.image = '/Solana.svg'
-            } else if (ata.image) {
-                // handle general SPL tokens
-                const response = await fetch(`/api/images`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ url: ata.image }),
-                })
+            switch (ata.symbol) {
+                case 'USDC':
+                    ata.image =
+                        'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=032'
+                    break
+                case 'RCL':
+                    ata.image =
+                        'https://ipfs.io/ipfs/Qme9ErqmQaznzpfDACncEW48NyXJPFP7HgzfoNdto9xQ9P/02.jpg'
+                    break
+                case 'SOL':
+                    ata.image = '/Solana.svg'
+                    break
+                default:
+                    if (ata.image) {
+                        // handle general SPL tokens
+                        const response = await fetch(`/api/images`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ url: ata.image }),
+                        })
 
-                const resText = await response.text()
-                let data = JSON.parse(resText)
-                ata.image = data.image
-            }
+                        const resText = await response.text()
+                        let data = JSON.parse(resText)
+                        ata.image = data.image
+                    }
 
-            if (!ata.image) {
-                ata.image = generateIcon(ata.mint.toString())
+                    if (!ata.image) {
+                        ata.image = generateIcon(ata.mint.toString())
+                    }
+                    break
             }
         } catch (error) {
             console.error('Error fetching image:', error, ata.image)
@@ -59,7 +57,7 @@ function generateIcon(address: string) {
 
     if (!ctx) return ''
 
-    ctx.fillStyle = '#b22222'
+    ctx.fillStyle = `#${Math.floor(Math.random() * 16777215).toString(16)}`
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     ctx.font = 'bold 12px Arial'
