@@ -36,7 +36,10 @@ export default function Balances({ walletAddress }: BalancesProps) {
 
     useEffect(
         () => {
-            if (client) {
+            if (
+                client &&
+                walletAddress === client.getWatchAddress().toString()
+            ) {
                 _getNetWorth()
                 return
             }

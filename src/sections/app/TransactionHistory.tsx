@@ -198,66 +198,79 @@ const columns = [
     ),
 ]
 
-export default function TransactionHistory() {
+type Props = {
+    walletAddress: string
+}
+
+export default function TransactionHistory({ walletAddress }: Props) {
     const [txs, setTxs] = useState<FormattedTx[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>()
 
     const client = useAppSelector(selectClient)
     const atas = useAppSelector(selectAtas)
-        .filter((x) => x.balance.formatted !== 0)
-        .sort(
-            (a, b) =>
-                b.balance.formatted * b.price - a.balance.formatted * a.price
-        )
 
-    useEffect(() => {
-        if (txs.length || !atas.length) {
+    async function getData() {
+        if (!client) {
             return
         }
+        const limit = 10
 
-        async function getData() {
-            if (!client) {
-                return
-            }
-            const limit = 10
+        const _txs = await client.getTransactions({
+            batchSize: limit,
+            limit,
+        })
+        const formattedTxs = formatTableTxs(_txs, atas)
+        setTxs(formattedTxs)
+        setIsLoading(false)
 
-            const _txs = await client.getTransactions({
-                batchSize: limit,
-                limit,
-            })
-            const formattedTxs = formatTableTxs(_txs, atas)
-            setTxs(formattedTxs)
-            setIsLoading(false)
+        setIsLoadingMore(true)
+        const moreTxs = await client.getTransactions({
+            batchSize: limit,
+            limit,
+        })
+        const formattedMoreTxs = formatTableTxs(moreTxs, atas)
+        setTxs(formattedMoreTxs)
+        setIsLoadingMore(false)
+    }
 
-            setIsLoadingMore(true)
-            const moreTxs = await client.getTransactions({
-                batchSize: limit,
-                limit,
-            })
-            const formattedMoreTxs = formatTableTxs(moreTxs, atas)
-            setTxs(formattedMoreTxs)
-            setIsLoadingMore(false)
+    useEffect(() => {
+        if (!atas.length) {
+            return
         }
-
-        getData()
-    }, [client, atas, txs.length])
+        if (
+            txs.length &&
+            client?.getWatchAddress().toString() !== walletAddress
+        ) {
+            setTxs([]) // handle client not updated yet and reset txs to avoid data desynchronization
+        }
+        if (
+            !txs.length &&
+            client?.getWatchAddress().toString() === walletAddress
+        ) {
+            getData() // finally fetch the data
+        }
+    }, [client, walletAddress, atas, txs.length])
 
     return (
         <div className="w-full h-full md:w-1/2 flex flex-col gap-6 font-semibold p-6">
             <div className="flex justify-between">
                 <p className="text-2xl">Transaction History</p>
-                {isLoadingMore && (
-                    <p className="text-sm animate-bounce">Loading more...</p>
-                )}
+                {isLoadingMore && <p className="text-sm">Loading more...</p>}
             </div>
             {isLoading ? (
                 <div className="w-full h-full flex items-center justify-center">
-                    <p className="animate-bounce">Loading Transactions</p>
+                    <p>Loading Transactions...</p>
                 </div>
             ) : (
                 <div className="h-full">
-                    <Table data={txs} columns={columns} />
+                    {txs.length ? (
+                        <Table data={txs} columns={columns} />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                            <p>No transactions found for this wallet</p>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

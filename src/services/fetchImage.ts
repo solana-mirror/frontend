@@ -2,7 +2,7 @@ import { ParsedAta } from 'solana-mirror'
 
 export async function fetchImages(atas: ParsedAta[]): Promise<ParsedAta[]> {
     const updatedAtas = [...atas]
-    console.log(atas)
+
     const fetchPromises = updatedAtas.map(async (ata) => {
         try {
             switch (ata.symbol) {

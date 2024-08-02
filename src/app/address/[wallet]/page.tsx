@@ -46,7 +46,7 @@ export default function App({ params }: Props) {
 
                                 <Balances walletAddress={walletAddress} />
                             </div>
-                            <TransactionHistory />
+                            <TransactionHistory walletAddress={walletAddress} />
                         </div>
                     </div>
                 ) : (
