@@ -1,40 +1,18 @@
 'use client'
 
-import { useCallback, useEffect, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { SearchInput } from '../SearchInput'
 import Link from 'next/link'
-import { cn } from '@/utils'
+import { cn, formatAddress } from '@/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
-import {
-    BitgetWalletName,
-    MathWalletName,
-    PhantomWalletName,
-    SolflareWalletName,
-    TokenPocketWalletName,
-} from '@solana/wallet-adapter-wallets'
-import { NoAddress } from './NoAddress'
-import { UserItems } from './UserItems'
 import { useRouter } from 'next/navigation'
-import { WalletName } from '@solana/wallet-adapter-base'
+import { Button } from '../Button'
+import Image from 'next/image'
+import ConnectWalletModal from './ConnectWalletModal'
+import WalletModal from './WalletModal'
 
 type NavBarProps = {
     isAddress: boolean
-}
-
-export enum Wallet {
-    Phantom = 'Phantom',
-    Solflare = 'Solflare',
-    Bitget = 'Bitget',
-    TokenPocket = 'TokenPocket',
-    MathWallet = 'MathWallet',
-}
-
-const wallets: Record<Wallet, WalletName> = {
-    Phantom: PhantomWalletName,
-    Solflare: SolflareWalletName,
-    Bitget: BitgetWalletName,
-    TokenPocket: TokenPocketWalletName,
-    MathWallet: MathWalletName,
 }
 
 export const NavBar = ({ isAddress }: NavBarProps) => {
@@ -43,14 +21,7 @@ export const NavBar = ({ isAddress }: NavBarProps) => {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
 
-    const { select, publicKey, disconnect } = useWallet()
-
-    const connectWallet = useCallback(
-        (walletName: string) => {
-            select(wallets[walletName as Wallet])
-        },
-        [select]
-    )
+    const { publicKey } = useWallet()
 
     useEffect(() => {
         if (publicKey && justConnected) {
@@ -61,47 +32,74 @@ export const NavBar = ({ isAddress }: NavBarProps) => {
         }
     }, [publicKey, justConnected, router])
 
-    const handleConnectWallet = (walletName: string) => {
-        setJustConnected(true)
-        connectWallet(walletName)
-    }
-
     return (
-        <div
-            className={cn(
-                'w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9',
-                !isAddress && 'fixed'
-            )}
-        >
-            <div className="font-bold text-accent text-base md:text-xl">
-                <Link href={'/'}>SolanaMirror</Link>
+        <>
+            <div
+                className={cn(
+                    'w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9',
+                    !isAddress && 'fixed'
+                )}
+            >
+                <div className="font-bold text-accent text-base md:text-xl">
+                    <Link href={'/'}>SolanaMirror</Link>
+                </div>
+                {isAddress && <SearchInput position={'navbar'} />}
+                {!publicKey ? (
+                    <Button
+                        onClick={() => setIsModalOpen(!isModalOpen)}
+                        size={'md'}
+                        color={'dark_accent'}
+                    >
+                        Connect Wallet
+                    </Button>
+                ) : (
+                    <>
+                        {isPending ? (
+                            <p>Loading...</p>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Link href={`/address/${publicKey.toString()}`}>
+                                    <Button
+                                        onClick={() => {}}
+                                        color={'primary'}
+                                        size={'icon'}
+                                    >
+                                        <Image
+                                            src={'/User.svg'}
+                                            alt="user"
+                                            width={18}
+                                            height={18}
+                                        />
+                                    </Button>
+                                </Link>
+
+                                <Button
+                                    onClick={() => setIsModalOpen(!isModalOpen)}
+                                    size={'md'}
+                                    color={'primary'}
+                                >
+                                    {formatAddress(publicKey.toString(), 4)}
+                                </Button>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
-            {isAddress && <SearchInput position={'navbar'} />}
-            {!publicKey ? (
-                <NoAddress
-                    wallets={wallets}
-                    isModalOpen={isModalOpen}
-                    onToggleModal={() => {
-                        setIsModalOpen(!isModalOpen)
-                    }}
-                    onConnectWallet={(walletName) =>
-                        handleConnectWallet(walletName)
-                    }
-                />
-            ) : (
+
+            {isModalOpen && (
                 <>
-                    {isPending ? (
-                        <p>Loading...</p>
-                    ) : (
-                        <UserItems
-                            publicKey={publicKey}
-                            isModalOpen={isModalOpen}
+                    {publicKey ? (
+                        <WalletModal
                             onToggleModal={() => setIsModalOpen(!isModalOpen)}
-                            onDisconnectWallet={() => disconnect()}
+                        />
+                    ) : (
+                        <ConnectWalletModal
+                            onToggleModal={() => setIsModalOpen(!isModalOpen)}
+                            onWalletConnect={() => setJustConnected(true)}
                         />
                     )}
                 </>
             )}
-        </div>
+        </>
     )
 }
