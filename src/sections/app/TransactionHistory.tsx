@@ -220,6 +220,10 @@ export default function TransactionHistory({ walletAddress }: Props) {
             batchSize: limit,
             limit,
         })
+        if (!_txs.length) {
+            setIsLoading(false)
+            return
+        }
         const formattedTxs = formatTableTxs(_txs, atas)
         setTxs(formattedTxs)
         setIsLoading(false)
