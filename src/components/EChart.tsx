@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { ChartDataWithPrice } from 'solana-mirror'
-import dayjs from 'dayjs'
+import BN from 'bn.js'
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
 
 type EChartProps = {
-    chartData: ChartDataWithPrice[]
+    chartData: ChartDataWithPrice<BN>[]
 }
 
 export function EChart({ chartData }: EChartProps) {

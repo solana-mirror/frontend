@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { cn, formatAddress } from '@/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useRouter } from 'next/navigation'
-import { Button } from '../Button'
+import { Button } from '../UI/Button'
 import Image from 'next/image'
 import ConnectWalletModal from './ConnectWalletModal'
 import WalletModal from './WalletModal'
@@ -15,7 +15,7 @@ type NavBarProps = {
     isAddress: boolean
 }
 
-export const NavBar = ({ isAddress }: NavBarProps) => {
+export default function NavBar({ isAddress }: NavBarProps) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [justConnected, setJustConnected] = useState(false)
     const router = useRouter()
@@ -86,19 +86,17 @@ export const NavBar = ({ isAddress }: NavBarProps) => {
                 )}
             </div>
 
-            {isModalOpen && (
-                <>
-                    {publicKey ? (
-                        <WalletModal
-                            onToggleModal={() => setIsModalOpen(!isModalOpen)}
-                        />
-                    ) : (
-                        <ConnectWalletModal
-                            onToggleModal={() => setIsModalOpen(!isModalOpen)}
-                            onWalletConnect={() => setJustConnected(true)}
-                        />
-                    )}
-                </>
+            {isModalOpen && publicKey ? (
+                <WalletModal
+                    onToggleModal={() => setIsModalOpen(!isModalOpen)}
+                />
+            ) : isModalOpen && !publicKey ? (
+                <ConnectWalletModal
+                    onToggleModal={() => setIsModalOpen(!isModalOpen)}
+                    onWalletConnect={() => setJustConnected(true)}
+                />
+            ) : (
+                ''
             )}
         </>
     )

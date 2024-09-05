@@ -1,4 +1,4 @@
-import { Modal } from '../Modal'
+import { Modal } from '../UI/Modal'
 import Image from 'next/image'
 import { useCallback } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'

@@ -1,7 +1,5 @@
 'use client'
 
-import { Provider } from 'react-redux'
-import { store } from './store'
 import {
     ConnectionProvider,
     WalletProvider,
@@ -26,11 +24,7 @@ type Props = {
 }
 
 export function Providers({ children }: IProps) {
-    return (
-        <Provider store={store}>
-            <Wallet>{children}</Wallet>
-        </Provider>
-    )
+    return <Wallet>{children}</Wallet>
 }
 
 const Wallet = ({ children }: Props) => {

@@ -1,6 +1,7 @@
 import { ParsedAta, ParsedTransaction } from 'solana-mirror'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
+import BN from 'bn.js'
 
 export type TokenTransactedDisplay = {
     photo: string
@@ -18,8 +19,8 @@ export type FormattedTx = {
 }
 
 export function formatTableTxs(
-    txs: ParsedTransaction[],
-    atas: ParsedAta[]
+    txs: ParsedTransaction<BN>[],
+    atas: ParsedAta<BN>[]
 ): FormattedTx[] {
     const formattedTxs: FormattedTx[] = []
 

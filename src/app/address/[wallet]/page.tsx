@@ -1,11 +1,11 @@
 import { PublicKey } from '@solana/web3.js'
-import { NavBar } from '@/components/Navbar'
+import NavBar from '@/components/Navbar'
 import AddressBar from '@/sections/app/AddressBar'
 import Balances from '@/sections/app/Balances'
-
 import TransactionHistory from '@/sections/app/TransactionHistory'
 import { Suspense } from 'react'
 import React from 'react'
+
 const Chart = React.lazy(() => import('@/sections/app/Chart'))
 
 type Props = {

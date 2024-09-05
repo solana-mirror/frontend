@@ -1,18 +1,14 @@
 'use client'
 
-import { FormattedTx, formatTableTxs } from '@/utils/formatTableTxs'
-import { useEffect, useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
 import Image from 'next/image'
-import Table from '@/components/Table'
 import { formatAddress } from '@/utils'
-import { Hyperlink } from '@/components/Hyperlink'
-import { useAppSelector } from '@/state/store'
-import { selectClient, selectAtas } from '@/state/user/reducer'
+import { Hyperlink } from '@/components/UI/Hyperlink'
+import { FormattedTx } from '@/utils/formatTableTxs'
 
 const columnHelper = createColumnHelper<FormattedTx>()
 
-const columns = [
+export const columns = [
     columnHelper.accessor(
         (row) => {
             return { year: row.date[0], hour: row.date[1] }
@@ -197,86 +193,3 @@ const columns = [
         }
     ),
 ]
-
-type Props = {
-    walletAddress: string
-}
-
-export default function TransactionHistory({ walletAddress }: Props) {
-    const [txs, setTxs] = useState<FormattedTx[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [isLoadingMore, setIsLoadingMore] = useState<boolean>()
-
-    const client = useAppSelector(selectClient)
-    const atas = useAppSelector(selectAtas)
-
-    async function getData() {
-        if (!client) {
-            return
-        }
-        const limit = 10
-
-        const _txs = await client.getTransactions({
-            batchSize: limit,
-            limit,
-        })
-        if (!_txs.length) {
-            setIsLoading(false)
-            return
-        }
-        const formattedTxs = formatTableTxs(_txs, atas)
-        setTxs(formattedTxs)
-        setIsLoading(false)
-
-        setIsLoadingMore(true)
-        const moreTxs = await client.getTransactions({
-            batchSize: limit,
-            limit,
-        })
-        const formattedMoreTxs = formatTableTxs(moreTxs, atas)
-        setTxs(formattedMoreTxs)
-        setIsLoadingMore(false)
-    }
-
-    useEffect(() => {
-        if (!atas.length) {
-            return
-        }
-        if (
-            txs.length &&
-            client?.getWatchAddress().toString() !== walletAddress
-        ) {
-            setTxs([]) // handle client not updated yet and reset txs to avoid data desynchronization
-        }
-        if (
-            !txs.length &&
-            client?.getWatchAddress().toString() === walletAddress
-        ) {
-            getData() // finally fetch the data
-        }
-    }, [client, walletAddress, atas, txs.length])
-
-    return (
-        <div className="w-full h-full md:w-1/2 flex flex-col gap-6 font-semibold p-6">
-            <div className="flex justify-between">
-                <p className="text-2xl">Transaction History</p>
-                {isLoadingMore && <p className="text-sm">Loading more...</p>}
-            </div>
-            {isLoading ? (
-                <div className="w-full h-full flex items-center justify-center">
-                    <p>Loading Transactions...</p>
-                </div>
-            ) : (
-                <div className="h-full">
-                    {txs.length ? (
-                        <Table data={txs} columns={columns} />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                            <p>No transactions found for this wallet</p>
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
-    )
-}

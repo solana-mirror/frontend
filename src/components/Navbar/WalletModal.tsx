@@ -1,10 +1,8 @@
 import { cn, copy, formatAddress } from '@/utils'
-import { Button } from '../Button'
-import { useAppSelector } from '@/state/store'
-import { selectAtasValue } from '@/state/user/selector'
+import { Button } from '../UI/Button'
 import { useState, useEffect } from 'react'
-import { Modal } from '../Modal'
-import { PublicKey } from '@solana/web3.js'
+import { Modal } from '../UI/Modal'
+import { Connection, PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 
 type Props = {
@@ -12,11 +10,10 @@ type Props = {
 }
 
 export default function WalletModal({ onToggleModal }: Props) {
-    const { disconnect, publicKey } = useWallet()
-
+    const [solBalance, setSolBalance] = useState<number>()
     const [copied, setCopied] = useState(false)
-    const atas = useAppSelector(selectAtasValue)
-    const solAta = atas.find((x) => x.symbol === 'SOL')
+
+    const { disconnect, publicKey } = useWallet()
 
     useEffect(() => {
         if (copied) {
@@ -24,6 +21,22 @@ export default function WalletModal({ onToggleModal }: Props) {
             return () => clearTimeout(timer)
         }
     }, [copied])
+
+    const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
+    const client = new Connection(rpc)
+
+    useEffect(() => {
+        getSolBalance()
+    }, [publicKey])
+
+    async function getSolBalance() {
+        if (!publicKey) {
+            return
+        }
+
+        setSolBalance(await client.getBalance(publicKey))
+    }
+
     return (
         <Modal
             onClose={onToggleModal}
@@ -34,7 +47,7 @@ export default function WalletModal({ onToggleModal }: Props) {
                     {formatAddress((publicKey as PublicKey).toString(), 4)}
                 </p>
                 <p className="text-sm opacity-50">
-                    {solAta ? solAta.balance.formatted.toFixed(2) : '0.00'}
+                    {solBalance ? solBalance : '0.00'}
                 </p>
             </div>
             <div className="flex gap-3">

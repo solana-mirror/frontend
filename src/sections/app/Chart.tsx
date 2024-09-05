@@ -1,28 +1,19 @@
 import { EChart } from '@/components/EChart'
 import { PublicKey } from '@solana/web3.js'
-import SolanaMirror, { ChartDataWithPrice } from 'solana-mirror'
+import BN from 'bn.js'
+import { ChartDataWithPrice, getChartData } from 'solana-mirror'
 
 type ChartProps = {
     walletAddress: string
 }
 
 export default async function Chart({ walletAddress }: ChartProps) {
-    const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
-
-    const client = new SolanaMirror({
-        watch: new PublicKey(walletAddress),
-        rpc,
-    })
-
-    let chartData: ChartDataWithPrice[] = []
+    let chartData: ChartDataWithPrice<BN>[] = []
 
     try {
-        chartData = await client.getChartData({
-            timeframe: 'D',
-            range: 30,
-        })
-    } catch (error) {
-        console.error('Error fetching chart data:', error)
+        chartData = await getChartData(new PublicKey(walletAddress), 30, 'd')
+    } catch (e) {
+        console.log('e fetching chart data:', e)
     }
 
     return (
