@@ -1,8 +1,9 @@
-import { FormattedTx, formatTableTxs } from '@/utils/formatTableTxs'
+import { formatTableTxs, normalizeData } from '@/utils'
 import Table from '@/components/Table'
 import { getTokenAccounts, getTransactions } from 'solana-mirror'
 import { PublicKey } from '@solana/web3.js'
 import { columns } from './Columns'
+import { FormattedTx } from '@/types'
 
 type Props = {
     walletAddress: string
@@ -33,7 +34,7 @@ export default async function TransactionHistory({ walletAddress }: Props) {
             ) : (
                 <div className="h-full">
                     {txs.length ? (
-                        <Table data={txs} columns={columns} />
+                        <Table data={normalizeData(txs)} columns={columns} />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center">
                             <p>No transactions found for this wallet</p>

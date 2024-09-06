@@ -4,7 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import Image from 'next/image'
 import { formatAddress } from '@/utils'
 import { Hyperlink } from '@/components/UI/Hyperlink'
-import { FormattedTx } from '@/utils/formatTableTxs'
+import { FormattedTx } from '@/types'
 
 const columnHelper = createColumnHelper<FormattedTx>()
 

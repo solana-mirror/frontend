@@ -12,17 +12,13 @@ import {
 } from '@tanstack/react-table'
 import { cn } from '@/utils'
 
-type TableProps<T> = {
+type Props<T> = {
     data: T[]
     columns: ColumnDef<T, any>[]
     minWidth?: number
 }
 
-export default function Table<T>({
-    data,
-    columns,
-    minWidth = 800,
-}: TableProps<T>) {
+export default function Table<T>({ data, columns, minWidth = 800 }: Props<T>) {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 0,

@@ -2,6 +2,7 @@ import { getTokenAccounts, ParsedAta } from 'solana-mirror'
 import { PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import BalancesToggles from './BalancesToggles'
+import { normalizeData } from '@/utils'
 
 type Props = {
     walletAddress: string
@@ -21,18 +22,16 @@ export default async function Balances({ walletAddress }: Props) {
                     a.balance.formatted * a.price
             )
 
-        let balance = 0
         for (let i = 0; i < atas.length; i++) {
-            balance += atas[i].price * atas[i].balance.formatted
+            netWorth += atas[i].price * atas[i].balance.formatted
         }
-        netWorth = balance
     } catch (e) {
         console.log('Error fetching balances:', e)
     }
 
     return (
         <div className="flex-grow text-center p-4 font-bold md:h-1/2">
-            <BalancesToggles netWorth={netWorth} atas={atas} />
+            <BalancesToggles netWorth={netWorth} atas={normalizeData(atas)} />
         </div>
     )
 }

@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { ParsedAta } from 'solana-mirror'
-import BN from 'bn.js'
 import { Hyperlink } from '@/components/UI/Hyperlink'
+import BN from 'bn.js'
+import { ParsedAta } from 'solana-mirror'
 
 type Toggle = {
     label: string

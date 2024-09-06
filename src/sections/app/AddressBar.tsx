@@ -4,11 +4,11 @@ import { copy } from '@/utils'
 import Image from 'next/image'
 import { useState } from 'react'
 
-type AddressBarProps = {
+type Props = {
     walletAddress: string | string[]
 }
 
-export default function AddressBar({ walletAddress }: AddressBarProps) {
+export default function AddressBar({ walletAddress }: Props) {
     const [copied, setCopied] = useState(false)
     return (
         <div className="flex flex-col w-full gap-1 font-bold text-lg py-2 px-4 sm:px-9">

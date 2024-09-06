@@ -7,11 +7,11 @@ import BN from 'bn.js'
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
 
-type EChartProps = {
+type Props = {
     chartData: ChartDataWithPrice<BN>[]
 }
 
-export function EChart({ chartData }: EChartProps) {
+export function EChart({ chartData }: Props) {
     const [chartOptions, setChartOptions] = useState({})
 
     const priceFormatter = new Intl.NumberFormat('en-US', {

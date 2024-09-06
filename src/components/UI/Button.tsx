@@ -1,14 +1,14 @@
 import { cn } from '@/utils'
 import { ReactNode } from 'react'
 
-type ButtonProps = {
+type Props = {
     children: ReactNode
     onClick: () => void
     size: 'icon' | 'none' | 'md'
     color: 'accent' | 'dark_accent' | 'primary' | 'red'
 }
 
-export const Button = ({ children, onClick, size, color }: ButtonProps) => {
+export const Button = ({ children, onClick, size, color }: Props) => {
     const classes = {
         common: 'rounded-md font-bold text-xs sm:text-sm md:text-lg hover:opacity-70 transition duration-300',
         sizes: {

@@ -2,7 +2,7 @@ import { Modal } from '../UI/Modal'
 import Image from 'next/image'
 import { useCallback } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Wallet, wallets } from '@/utils/wallets'
+import { Wallet, wallets } from '@/types'
 
 type Props = {
     onToggleModal: () => void

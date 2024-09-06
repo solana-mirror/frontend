@@ -11,11 +11,11 @@ import Image from 'next/image'
 import ConnectWalletModal from './ConnectWalletModal'
 import WalletModal from './WalletModal'
 
-type NavBarProps = {
+type Props = {
     isAddress: boolean
 }
 
-export default function NavBar({ isAddress }: NavBarProps) {
+export default function NavBar({ isAddress }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [justConnected, setJustConnected] = useState(false)
     const router = useRouter()

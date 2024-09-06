@@ -2,16 +2,18 @@
 
 import { PublicKey } from '@solana/web3.js'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useRef, useState, useTransition } from 'react'
 import { Input } from './UI/Input'
-import { cn, formatAddress, handleSearchAccInputChange } from '@/utils'
+import { cn } from '@/utils'
 import { useShortcut } from '@/hooks/useShortcut'
+import { handleSearchAccInputChange } from '@/utils'
+import { formatAddress } from '@/utils'
 
-type SearchInputProps = {
+type Props = {
     position: 'navbar' | 'landing'
 }
 
-export const SearchInput = ({ position }: SearchInputProps) => {
+export const SearchInput = ({ position }: Props) => {
     const [invalidAddress, setInvalidAddress] = useState<boolean>()
     const [address, setAddress] = useState<PublicKey | string>()
 

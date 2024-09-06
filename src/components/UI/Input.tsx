@@ -1,7 +1,7 @@
 import { cn } from '@/utils'
 import { RefObject } from 'react'
 
-type InputPros = {
+type Props = {
     inputRef: RefObject<HTMLInputElement>
     placeholder: string
     shortcut: string
@@ -15,7 +15,7 @@ export const Input = ({
     shortcut,
     size,
     onChange,
-}: InputPros) => {
+}: Props) => {
     const classes = {
         common: 'flex gap-2 py-4 px-6 items-center bg-primary rounded-md font-bold text-sm',
         sizes: {

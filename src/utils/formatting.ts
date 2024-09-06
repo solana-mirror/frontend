@@ -1,21 +1,11 @@
 import { ParsedAta, ParsedTransaction } from 'solana-mirror'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
+import { FormattedTx, TokenTransactedDisplay } from '@/types'
+import { PublicKey } from '@solana/web3.js'
 
-export type TokenTransactedDisplay = {
-    photo: string
-    amount: number
-    name: string
-    mint: PublicKey
-}
-
-export type FormattedTx = {
-    date: string[]
-    txId: string
-    types: string[]
-    outgoing: TokenTransactedDisplay[]
-    incoming: TokenTransactedDisplay[]
+export function formatAddress(address: string, chars: number) {
+    return `${address.slice(0, chars)}...${address.slice(-chars)}`
 }
 
 export function formatTableTxs(
@@ -90,4 +80,42 @@ export function formatTableTxs(
     }
 
     return formattedTxs
+}
+
+// helper functions to normalize data
+
+function isBN(value: any): value is BN {
+    return BN.isBN(value)
+}
+
+function isPublicKey(value: any): value is PublicKey {
+    return value instanceof PublicKey
+}
+
+function normalizeValue(value: any): any {
+    if (isBN(value)) {
+        return value.toString()
+    }
+
+    if (isPublicKey(value)) {
+        return value.toBase58()
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(normalizeValue)
+    }
+
+    if (value && typeof value === 'object') {
+        const normalizedObject: any = {}
+        for (const [key, val] of Object.entries(value)) {
+            normalizedObject[key] = normalizeValue(val)
+        }
+        return normalizedObject
+    }
+
+    return value
+}
+
+export function normalizeData<T>(data: T): T {
+    return normalizeValue(data)
 }

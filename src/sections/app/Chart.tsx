@@ -1,13 +1,14 @@
 import { EChart } from '@/components/EChart'
+import { normalizeData } from '@/utils'
 import { PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { ChartDataWithPrice, getChartData } from 'solana-mirror'
 
-type ChartProps = {
+type Props = {
     walletAddress: string
 }
 
-export default async function Chart({ walletAddress }: ChartProps) {
+export default async function Chart({ walletAddress }: Props) {
     let chartData: ChartDataWithPrice<BN>[] = []
 
     try {
@@ -20,7 +21,7 @@ export default async function Chart({ walletAddress }: ChartProps) {
         <div className="w-full flex flex-col h-full md:h-1/2 p-4">
             <div className="flex flex-col gap-4 p-4 bg-primary rounded-md h-full">
                 <p className="text-2xl font-bold text-left">Chart</p>
-                <EChart chartData={JSON.parse(JSON.stringify(chartData))} />
+                <EChart chartData={normalizeData(chartData)} />
             </div>
         </div>
     )
