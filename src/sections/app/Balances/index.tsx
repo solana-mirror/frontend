@@ -22,6 +22,14 @@ export default async function Balances({ walletAddress }: Props) {
                     a.balance.formatted * a.price
             )
 
+        //TODO: handle a proper way of adding inaccessible images
+        for (const ata of atas) {
+            if (ata.symbol === 'BILLY') {
+                ata.image = '/Billy.svg'
+                break
+            }
+        }
+
         for (let i = 0; i < atas.length; i++) {
             netWorth += atas[i].price * atas[i].balance.formatted
         }

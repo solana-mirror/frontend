@@ -17,6 +17,14 @@ export default async function TransactionHistory({ walletAddress }: Props) {
         let rawTxs = await getTransactions(new PublicKey(walletAddress))
         let atas = await getTokenAccounts(new PublicKey(walletAddress))
 
+        //TODO: handle a proper way of adding inaccesible images
+        for (const ata of atas) {
+            if (ata.symbol === 'BILLY') {
+                ata.image = '/Billy.svg'
+                break
+            }
+        }
+
         txs = formatTableTxs(rawTxs, atas)
     } catch (e) {
         console.log('Error fetching transaction history: ', e)

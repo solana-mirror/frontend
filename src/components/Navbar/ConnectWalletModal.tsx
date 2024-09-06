@@ -39,7 +39,7 @@ export default function ConnectWalletModal({
                         className="flex items-center w-full gap-3 py-3 px-4 bg-secondary rounded-sm hover:opacity-70 transition duration-300"
                     >
                         <Image
-                            src={`/wallets/${walletName}.png`}
+                            src={`/wallets/${walletName}.svg`}
                             alt={walletName}
                             width={24}
                             height={24}
