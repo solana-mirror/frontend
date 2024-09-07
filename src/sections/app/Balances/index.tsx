@@ -22,23 +22,16 @@ export default async function Balances({ walletAddress }: Props) {
                     a.balance.formatted * a.price
             )
 
-        //TODO: handle a proper way of adding inaccessible images
-        for (const ata of atas) {
-            if (ata.symbol === 'BILLY') {
-                ata.image = '/Billy.svg'
-                break
-            }
-        }
-
+        //TODO: default image
         for (let i = 0; i < atas.length; i++) {
             netWorth += atas[i].price * atas[i].balance.formatted
         }
     } catch (e) {
-        console.log('Error fetching balances:', e)
+        console.error('Error fetching balances:', e)
     }
 
     return (
-        <div className="flex-grow text-center p-4 font-bold md:h-1/2">
+        <div className="flex-grow text-center font-bold md:h-1/2">
             <BalancesToggles netWorth={netWorth} atas={normalizeData(atas)} />
         </div>
     )

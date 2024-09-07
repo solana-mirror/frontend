@@ -22,7 +22,7 @@ export default function Table<T>({ data, columns, minWidth = 800 }: Props<T>) {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 0,
-            pageSize: 5,
+            pageSize: 15,
         })
 
     const table = useReactTable({
@@ -38,8 +38,8 @@ export default function Table<T>({ data, columns, minWidth = 800 }: Props<T>) {
     })
 
     return (
-        <div className="flex h-full w-full flex-col justify-between">
-            <div className="overflow-x-auto no-scrollbar">
+        <div className="flex h-full w-full flex-col justify-between gap-6 overflow-hidden">
+            <div className="overflow-y-scroll overflow-x-auto custom-scrollbar">
                 <table
                     className="table-auto w-full"
                     style={{

@@ -21,42 +21,38 @@ export default function App({ params }: Props) {
 
     try {
         watch = new PublicKey(walletAddress.toString())
-    } catch {
-        console.error('Invalid public key input')
-    }
+    } catch {}
 
     return (
         <div className="h-screen flex flex-col">
-            <NavBar isAddress={true} />
-            <div className="flex-grow overflow-y-auto no-scrollbar">
-                {watch ? (
-                    <div className="h-full flex flex-col">
-                        <AddressBar walletAddress={walletAddress} />
-                        <div className="flex flex-grow flex-col md:flex-row">
-                            <div className="w-full md:w-1/2 flex flex-col">
-                                <Suspense
-                                    fallback={
-                                        <div className="w-full flex items-center justify-center md:h-1/2">
-                                            Loading...
-                                        </div>
-                                    }
-                                >
-                                    <Chart walletAddress={walletAddress} />
-                                </Suspense>
-
-                                <Balances walletAddress={walletAddress} />
-                            </div>
-                            <TransactionHistory walletAddress={walletAddress} />
+            <NavBar hasSearch={true} />
+            {watch ? (
+                <div className="flex flex-col h-full overflow-y-auto no-scrollbar">
+                    <AddressBar walletAddress={walletAddress} />
+                    <div className="flex flex-col lg:flex-row flex-grow lg:overflow-hidden">
+                        <div className="h-full p-6 gap-6 lg:overflow-y-scroll no-scrollbar w-full lg:w-1/2 flex flex-col">
+                            <Suspense
+                                // TODO: SuspenseFallback component
+                                fallback={
+                                    <div className="w-full flex items-center justify-center lg:h-1/2">
+                                        Loading...
+                                    </div>
+                                }
+                            >
+                                <Chart walletAddress={walletAddress} />
+                            </Suspense>
+                            <Balances walletAddress={walletAddress} />
                         </div>
+                        <TransactionHistory walletAddress={walletAddress} />
                     </div>
-                ) : (
-                    <div className="flex items-center justify-center w-full h-full">
-                        <p className="text-center font-bold text-2xl">
-                            Unable to find account {walletAddress}
-                        </p>
-                    </div>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className="flex items-center justify-center w-full h-full">
+                    <p className="text-center font-bold text-2xl">
+                        Unable to find account {walletAddress}
+                    </p>
+                </div>
+            )}
         </div>
     )
 }

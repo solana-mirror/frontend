@@ -10,7 +10,7 @@ import { WalletName } from '@solana/wallet-adapter-base'
 
 export type AddressValidation = {
     address: PublicKey | string
-    inValidAddress: boolean
+    invalidAddress: boolean
 }
 
 export type TokenTransactedDisplay = {

@@ -7,22 +7,23 @@ import { cn, formatAddress } from '@/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '../UI/Button'
+import Splashscreen from '../Splashscreen'
 import Image from 'next/image'
 import ConnectWalletModal from './ConnectWalletModal'
 import WalletModal from './WalletModal'
 
 type Props = {
-    isAddress: boolean
+    hasSearch: boolean
 }
 
-export default function NavBar({ isAddress }: Props) {
+export default function NavBar({ hasSearch }: Props) {
+    const router = useRouter()
+
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [justConnected, setJustConnected] = useState(false)
-    const router = useRouter()
     const [isPending, startTransition] = useTransition()
 
     const { publicKey } = useWallet()
-
     useEffect(() => {
         if (publicKey && justConnected) {
             startTransition(() => {
@@ -32,57 +33,50 @@ export default function NavBar({ isAddress }: Props) {
         }
     }, [publicKey, justConnected, router])
 
+    if (isPending) {
+        return <Splashscreen />
+    }
+
     return (
         <>
-            <div
-                className={cn(
-                    'w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9',
-                    !isAddress && 'fixed'
-                )}
-            >
-                <div className="font-bold text-accent text-base md:text-xl">
-                    <Link href={'/'}>SolanaMirror</Link>
+            <div className="w-full flex items-center justify-between py-4 md:py-6 px-4 sm:px-9">
+                <div className="font-bold text-accent text-lg md:text-xl">
+                    <Link href="/">SolanaMirror</Link>
                 </div>
-                {isAddress && <SearchInput position={'navbar'} />}
+                {hasSearch && <SearchInput size="md" />}
                 {!publicKey ? (
                     <Button
                         onClick={() => setIsModalOpen(!isModalOpen)}
-                        size={'md'}
-                        color={'dark_accent'}
+                        size="md"
+                        color="dark_accent"
                     >
                         Connect Wallet
                     </Button>
                 ) : (
-                    <>
-                        {isPending ? (
-                            <p>Loading...</p>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <Link href={`/address/${publicKey.toString()}`}>
-                                    <Button
-                                        onClick={() => {}}
-                                        color={'primary'}
-                                        size={'icon'}
-                                    >
-                                        <Image
-                                            src={'/User.svg'}
-                                            alt="user"
-                                            width={18}
-                                            height={18}
-                                        />
-                                    </Button>
-                                </Link>
+                    <div className="flex items-center gap-2">
+                        <Link href={`/address/${publicKey.toString()}`}>
+                            <Button
+                                onClick={() => {}}
+                                color="primary"
+                                size="icon"
+                            >
+                                <Image
+                                    src="/User.svg"
+                                    alt="user"
+                                    width={16}
+                                    height={16}
+                                />
+                            </Button>
+                        </Link>
 
-                                <Button
-                                    onClick={() => setIsModalOpen(!isModalOpen)}
-                                    size={'md'}
-                                    color={'primary'}
-                                >
-                                    {formatAddress(publicKey.toString(), 4)}
-                                </Button>
-                            </div>
-                        )}
-                    </>
+                        <Button
+                            onClick={() => setIsModalOpen(!isModalOpen)}
+                            size="md"
+                            color="primary"
+                        >
+                            {formatAddress(publicKey.toString(), 4)}
+                        </Button>
+                    </div>
                 )}
             </div>
 

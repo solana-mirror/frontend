@@ -1,8 +1,8 @@
 import { cn, copy, formatAddress } from '@/utils'
 import { Button } from '../UI/Button'
-import { useState, useEffect } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { Modal } from '../UI/Modal'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { LAMPORTS_PER_SOL, Connection, PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 
 type Props = {
@@ -25,17 +25,18 @@ export default function WalletModal({ onToggleModal }: Props) {
     const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
     const client = new Connection(rpc)
 
-    useEffect(() => {
-        getSolBalance()
-    }, [publicKey])
-
-    async function getSolBalance() {
+    const getSolBalance = useCallback(async () => {
         if (!publicKey) {
             return
         }
+        const lamports = await client.getBalance(publicKey)
+        const formatted = +(lamports / LAMPORTS_PER_SOL).toFixed(5)
+        setSolBalance(formatted)
+    }, [publicKey])
 
-        setSolBalance(await client.getBalance(publicKey))
-    }
+    useEffect(() => {
+        getSolBalance()
+    }, [getSolBalance])
 
     return (
         <Modal

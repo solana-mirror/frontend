@@ -27,7 +27,7 @@ export function formatTableTxs(
 
         // handle no balances (it will not be included in the following loop)
         if (Object.keys(balances).length === 0) {
-            types = tx.parsedInstructions.slice(0, 2)
+            types = tx.parsedInstructions
         }
 
         for (const [key, balance] of Object.entries(balances)) {
@@ -65,7 +65,7 @@ export function formatTableTxs(
                     )
                     swapInstruction
                         ? (types = [swapInstruction])
-                        : (types = tx.parsedInstructions.slice(0, 2))
+                        : (types = tx.parsedInstructions)
                 }
             }
         }

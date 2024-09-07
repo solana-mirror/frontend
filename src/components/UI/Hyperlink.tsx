@@ -7,7 +7,7 @@ type Props = {
     className?: string
 }
 
-export const Hyperlink = ({ children, href, className }: Props) => {
+export default function Hyperlink({ children, href, className }: Props) {
     const classes = {
         common: 'text-accent underline hover:opacity-70',
     }

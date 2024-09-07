@@ -8,6 +8,10 @@
   scrollbar-width: none;
 }
 
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(223, 222, 231, 0.15) transparent;
+}
 
 :root {
   background: #1F2427;

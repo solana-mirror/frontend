@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { ChartDataWithPrice } from 'solana-mirror'
 import BN from 'bn.js'
+import { format } from 'path'
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
 
@@ -31,6 +32,7 @@ export function EChart({ chartData }: Props) {
             new Date(x.timestamp * 1000).toLocaleString()
         )
         const usdValues = chartData.map((x) => x.usdValue)
+        const minValue = Math.min(...usdValues)
 
         const option = {
             grid: {
@@ -42,7 +44,7 @@ export function EChart({ chartData }: Props) {
             tooltip: {
                 trigger: 'axis',
                 extraCssText:
-                    'background-color: #1B1B21;border-width: 0px;color: #DFDEE7; display: flex;flex-direction: column;gap: 8px',
+                    'background-color: #1F2427;border-width: 0px;color: #DFDEE7; display: flex;flex-direction: column;gap: 8px',
                 formatter: (params: any) => {
                     const formattedData = priceFormatter.format(params[0].data)
 
@@ -64,6 +66,7 @@ export function EChart({ chartData }: Props) {
                 },
             },
             yAxis: {
+                min: minValue * 0.95,
                 type: 'value',
                 splitLine: {
                     show: false,

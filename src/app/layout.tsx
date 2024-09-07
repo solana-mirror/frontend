@@ -7,7 +7,17 @@ const SpaceGrotesk = Space_Grotesk({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'Solana Mirror',
-    description: 'The view of the best Solana wallet checker',
+    description: 'Check your Solana wallet at a glance',
+    openGraph: {
+        title: 'Solana Mirror',
+        description: 'Check your Solana wallet at a glance',
+        images: 'solanamirror.xyz/meta.png',
+    },
+    twitter: {
+        title: 'Solana Mirror',
+        description: 'Check your Solana wallet at a glance',
+        images: 'solanamirror.xyz/meta.png',
+    },
 }
 
 export default function RootLayout({

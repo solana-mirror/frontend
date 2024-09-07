@@ -7,13 +7,12 @@ export function handleSearchAccInputChange(
     try {
         return {
             address: new PublicKey(walletAddress),
-            inValidAddress: false,
+            invalidAddress: false,
         }
     } catch {
-        console.error('Error: Invalid public key input')
         return {
             address: walletAddress,
-            inValidAddress: true,
+            invalidAddress: true,
         }
     }
 }

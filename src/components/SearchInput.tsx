@@ -1,88 +1,54 @@
 'use client'
 
-import { PublicKey } from '@solana/web3.js'
 import { useRouter } from 'next/navigation'
-import { useRef, useState, useTransition } from 'react'
+import { useRef, useTransition } from 'react'
 import { Input } from './UI/Input'
 import { cn } from '@/utils'
-import { useShortcut } from '@/hooks/useShortcut'
-import { handleSearchAccInputChange } from '@/utils'
-import { formatAddress } from '@/utils'
+import useShortcut, { useMetaKey } from '@/hooks/useShortcut'
+import Splashscreen from './Splashscreen'
 
 type Props = {
-    position: 'navbar' | 'landing'
+    size: 'md' | 'lg'
 }
 
-export const SearchInput = ({ position }: Props) => {
-    const [invalidAddress, setInvalidAddress] = useState<boolean>()
-    const [address, setAddress] = useState<PublicKey | string>()
-
+export const SearchInput = ({ size }: Props) => {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const metaKey = useMetaKey()
     useShortcut(() => {
         inputRef.current?.focus()
-    }, ['cmd', 'k'])
+    }, ['M', 'k'])
+
+    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        const address = inputRef.current?.value
+        if (!address) {
+            return
+        }
+
+        startTransition(() => {
+            router.push(`/address/${address}`)
+        })
+    }
+
+    if (isPending) {
+        return <Splashscreen />
+    }
 
     return (
-        <>
-            {!isPending ? (
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        startTransition(() => {
-                            router.push(`/address/${address}`)
-                        })
-                    }}
-                    className={cn(
-                        'relative',
-                        position === 'navbar'
-                            ? 'hidden sm:block'
-                            : position === 'landing' && 'w-full'
-                    )}
-                >
-                    <Input
-                        inputRef={inputRef}
-                        placeholder="Search Account"
-                        shortcut="Cmd+K"
-                        size={position === 'navbar' && 'sm'}
-                        onChange={(address) => {
-                            setAddress(
-                                handleSearchAccInputChange(address).address
-                            )
-                            setInvalidAddress(
-                                handleSearchAccInputChange(address)
-                                    .inValidAddress
-                            )
-                        }}
-                    />
-                    <div className="mt-2 w-full absolute">
-                        {address && (
-                            <div className="flex gap-2 py-4 px-6 bg-primary rounded-md font-bold text-sm">
-                                {invalidAddress ? (
-                                    <p>Not found</p>
-                                ) : (
-                                    <button
-                                        type="submit"
-                                        className="flex gap-2 items-center"
-                                    >
-                                        <div className="h-4 w-4 border"></div>
-                                        <p>
-                                            {formatAddress(
-                                                address.toString(),
-                                                10
-                                            )}
-                                        </p>
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </form>
-            ) : (
-                <p>Loading...</p>
-            )}
-        </>
+        <form
+            onSubmit={onSubmit}
+            className={cn(size === 'md' ? 'hidden md:block' : 'w-full')}
+        >
+            <Input
+                inputRef={inputRef}
+                placeholder="Search Account"
+                shortcut={`${metaKey}+K`}
+                size={size === 'md' && 'sm'}
+            />
+        </form>
     )
 }

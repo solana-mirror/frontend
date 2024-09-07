@@ -1,10 +1,10 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 
-export function useShortcut(callback: () => void, shortcut: string[]) {
+export default function useShortcut(callback: () => void, shortcut: string[]) {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             const isPressed = shortcut.map((key) => {
-                if (key === 'cmd') {
+                if (key === 'M') {
                     return e.metaKey
                 }
                 return e.key === key
@@ -21,4 +21,16 @@ export function useShortcut(callback: () => void, shortcut: string[]) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+}
+
+export function useMetaKey() {
+    const [metaKey, setMetaKey] = useState<'Cmd' | 'Ctrl'>('Ctrl')
+
+    useEffect(() => {
+        if (!window?.navigator?.userAgent.includes('Win')) {
+            setMetaKey('Cmd')
+        }
+    }, [])
+
+    return metaKey
 }
