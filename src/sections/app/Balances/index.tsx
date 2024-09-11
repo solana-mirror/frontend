@@ -1,19 +1,19 @@
 import { getTokenAccounts, ParsedAta } from 'solana-mirror'
 import { PublicKey } from '@solana/web3.js'
-import BN from 'bn.js'
 import BalancesToggles from './BalancesToggles'
-import { normalizeData } from '@/utils'
 
 type Props = {
     walletAddress: string
 }
 
 export default async function Balances({ walletAddress }: Props) {
-    let atas: ParsedAta<BN>[] = []
+    let atas: ParsedAta<string, string>[] = []
     let netWorth: number = 0
 
     try {
-        let rawAtas = await getTokenAccounts(new PublicKey(walletAddress))
+        let rawAtas = (await getTokenAccounts(
+            new PublicKey(walletAddress)
+        )) as ParsedAta<string, string>[]
         atas = rawAtas
             .filter((x) => x.balance.formatted !== 0)
             .sort(
@@ -32,7 +32,7 @@ export default async function Balances({ walletAddress }: Props) {
 
     return (
         <div className="flex-grow text-center font-bold md:h-1/2">
-            <BalancesToggles netWorth={netWorth} atas={normalizeData(atas)} />
+            <BalancesToggles netWorth={netWorth} atas={atas} />
         </div>
     )
 }

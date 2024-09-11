@@ -1,10 +1,9 @@
 import { ParsedAta } from 'solana-mirror'
 import Hyperlink from '@/components/UI/Hyperlink'
 import Image from 'next/image'
-import BN from 'bn.js'
 
 type Props = {
-    ata: ParsedAta<BN>
+    ata: ParsedAta<string, string>
     balancesHidden: boolean
 }
 

@@ -13,19 +13,19 @@ export type AddressValidation = {
     invalidAddress: boolean
 }
 
-export type TokenTransactedDisplay = {
+export type TokenTransactedDisplay<P extends PublicKey | string> = {
     photo: string
     amount: number
     name: string
-    mint: PublicKey
+    mint: P
 }
 
-export type FormattedTx = {
+export type FormattedTx<P extends PublicKey | string> = {
     date: string[]
     txId: string
     types: string[]
-    outgoing: TokenTransactedDisplay[]
-    incoming: TokenTransactedDisplay[]
+    outgoing: TokenTransactedDisplay<P>[]
+    incoming: TokenTransactedDisplay<P>[]
 }
 
 export enum Wallet {

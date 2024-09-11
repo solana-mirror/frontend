@@ -1,18 +1,15 @@
 import { ParsedAta, ParsedTransaction } from 'solana-mirror'
-import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import BN from 'bn.js'
 import { FormattedTx, TokenTransactedDisplay } from '@/types'
-import { PublicKey } from '@solana/web3.js'
 
 export function formatAddress(address: string, chars: number) {
     return `${address.slice(0, chars)}...${address.slice(-chars)}`
 }
 
 export function formatTableTxs(
-    txs: ParsedTransaction<BN>[],
-    atas: ParsedAta<BN>[]
-): FormattedTx[] {
-    const formattedTxs: FormattedTx[] = []
+    txs: ParsedTransaction<string>[],
+    atas: ParsedAta<string, string>[]
+): FormattedTx<string>[] {
+    const formattedTxs: FormattedTx<string>[] = []
 
     txs.sort((a, b) => b.blockTime - a.blockTime)
 
@@ -22,8 +19,8 @@ export function formatTableTxs(
         const date = new Date(tx.blockTime * 1000).toLocaleString().split(' ')
         const txId = tx.signatures[0]
         let types: string[] = []
-        let outgoing: TokenTransactedDisplay[] = []
-        let incoming: TokenTransactedDisplay[] = []
+        let outgoing: TokenTransactedDisplay<string>[] = []
+        let incoming: TokenTransactedDisplay<string>[] = []
 
         // handle no balances (it will not be included in the following loop)
         if (Object.keys(balances).length === 0) {
@@ -32,7 +29,7 @@ export function formatTableTxs(
 
         for (const [key, balance] of Object.entries(balances)) {
             for (let x = 0; x < atas.length; x++) {
-                if (fromWeb3JsPublicKey(atas[x].mint) !== key) {
+                if (atas[x].mint !== key) {
                     continue
                 }
 
@@ -80,42 +77,4 @@ export function formatTableTxs(
     }
 
     return formattedTxs
-}
-
-// helper functions to normalize data
-
-function isBN(value: any): value is BN {
-    return BN.isBN(value)
-}
-
-function isPublicKey(value: any): value is PublicKey {
-    return value instanceof PublicKey
-}
-
-function normalizeValue(value: any): any {
-    if (isBN(value)) {
-        return value.toString()
-    }
-
-    if (isPublicKey(value)) {
-        return value.toBase58()
-    }
-
-    if (Array.isArray(value)) {
-        return value.map(normalizeValue)
-    }
-
-    if (value && typeof value === 'object') {
-        const normalizedObject: any = {}
-        for (const [key, val] of Object.entries(value)) {
-            normalizedObject[key] = normalizeValue(val)
-        }
-        return normalizedObject
-    }
-
-    return value
-}
-
-export function normalizeData<T>(data: T): T {
-    return normalizeValue(data)
 }

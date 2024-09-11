@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { ChartDataWithPrice } from 'solana-mirror'
 
 type Props = {
-    chartData: ChartDataWithPrice<BN>[]
+    chartData: ChartDataWithPrice<string>[]
 }
 
 enum Timeframes {
@@ -20,13 +20,13 @@ export default function TimeframeSelector({ chartData }: Props) {
     // Something something filter the timestamps
     const [timeframe, setTimeframe] = useState<Timeframes>(Timeframes.OneMonth)
     const [selectedChartData, setSelectedChartData] =
-        useState<ChartDataWithPrice<BN>[]>(chartData)
+        useState<ChartDataWithPrice<string>[]>(chartData)
 
     function filterChartData(
-        chartData: ChartDataWithPrice<BN>[],
+        chartData: ChartDataWithPrice<string>[],
         startT: number
     ) {
-        const newData: ChartDataWithPrice<BN>[] = []
+        const newData: ChartDataWithPrice<string>[] = []
 
         for (let i = chartData.length - 1; i >= 0; i--) {
             if (chartData[i].timestamp > startT) {

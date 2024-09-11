@@ -5,6 +5,8 @@ import Balances from '@/sections/app/Balances'
 import TransactionHistory from '@/sections/app/TransactionHistory'
 import { Suspense } from 'react'
 import React from 'react'
+import SuspenseFallback from '@/components/SuspenseFallback'
+import { revalidatePath } from 'next/cache'
 
 const Chart = React.lazy(() => import('@/sections/app/Chart'))
 
@@ -16,6 +18,10 @@ type Props = {
 
 export default function App({ params }: Props) {
     const walletAddress = params.wallet
+
+    // Disable caching
+    const path = `/address/${walletAddress}`
+    revalidatePath(path)
 
     let watch
 
@@ -32,11 +38,8 @@ export default function App({ params }: Props) {
                     <div className="flex flex-col lg:flex-row flex-grow lg:overflow-hidden">
                         <div className="h-full p-6 gap-6 lg:overflow-y-scroll no-scrollbar w-full lg:w-1/2 flex flex-col">
                             <Suspense
-                                // TODO: SuspenseFallback component
                                 fallback={
-                                    <div className="w-full flex items-center justify-center lg:h-1/2">
-                                        Loading...
-                                    </div>
+                                    <SuspenseFallback className="lg:h-1/2 h-96 lg:min-h-96 " />
                                 }
                             >
                                 <Chart walletAddress={walletAddress} />

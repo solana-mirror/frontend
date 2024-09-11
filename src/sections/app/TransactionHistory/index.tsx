@@ -1,6 +1,11 @@
-import { formatTableTxs, normalizeData } from '@/utils'
+import { formatTableTxs } from '@/utils'
 import Table from '@/components/Table'
-import { getTokenAccounts, getTransactions } from 'solana-mirror'
+import {
+    getTokenAccounts,
+    getTransactions,
+    ParsedAta,
+    TransactionResponse,
+} from 'solana-mirror'
 import { PublicKey } from '@solana/web3.js'
 import { transactionColumns } from './transactionColumns'
 import { FormattedTx } from '@/types'
@@ -10,15 +15,18 @@ type Props = {
 }
 
 export default async function TransactionHistory({ walletAddress }: Props) {
-    let txs: FormattedTx[] = []
+    let txs: FormattedTx<string>[] = []
     let isLoading = false
 
     try {
-        let rawTxs = await getTransactions(new PublicKey(walletAddress))
-        let atas = await getTokenAccounts(new PublicKey(walletAddress))
-
+        let rawTxs = (await getTransactions(
+            new PublicKey(walletAddress)
+        )) as TransactionResponse<string>
+        let atas = (await getTokenAccounts(
+            new PublicKey(walletAddress)
+        )) as ParsedAta<string, string>[]
         // TODO: default image
-        txs = formatTableTxs(rawTxs, atas)
+        txs = formatTableTxs(rawTxs.transactions, atas)
     } catch (e) {
         console.log('Error fetching transaction history: ', e)
     }
@@ -35,10 +43,7 @@ export default async function TransactionHistory({ walletAddress }: Props) {
             ) : (
                 <>
                     {txs.length ? (
-                        <Table
-                            data={normalizeData(txs)}
-                            columns={transactionColumns}
-                        />
+                        <Table data={txs} columns={transactionColumns} />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center ">
                             <p>No transactions found for this wallet</p>

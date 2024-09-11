@@ -2,13 +2,12 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import BN from 'bn.js'
 import { ParsedAta } from 'solana-mirror'
 import Balance from './Balance'
 
 type Props = {
     netWorth: number
-    atas: ParsedAta<BN>[]
+    atas: ParsedAta<string, string>[]
 }
 
 export default function BalancesToggles({ netWorth, atas }: Props) {
