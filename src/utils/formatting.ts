@@ -38,7 +38,7 @@ export function formatTableTxs(
                 if (change > 0) {
                     types = ['Receive']
                     incoming.push({
-                        photo: atas[x].image,
+                        photo: atas[x].image || '/defaultCoin.png',
                         amount: change,
                         name: atas[x].symbol,
                         mint: atas[x].mint,
@@ -48,7 +48,7 @@ export function formatTableTxs(
                 if (change < 0) {
                     types = ['Send']
                     outgoing.push({
-                        photo: atas[x].image,
+                        photo: atas[x].image || '/defaultCoin.png',
                         amount: -change,
                         name: atas[x].symbol,
                         mint: atas[x].mint,

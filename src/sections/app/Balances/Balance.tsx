@@ -21,7 +21,7 @@ export default function Balance({ ata, balancesHidden }: Props) {
         <div className="flex items-center justify-between">
             <div className="flex gap-2">
                 <Image
-                    src={ata.image}
+                    src={ata.image || '/defaultCoin.png'}
                     alt={ata.symbol}
                     width={24}
                     height={24}
