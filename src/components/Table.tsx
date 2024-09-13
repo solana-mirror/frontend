@@ -44,7 +44,7 @@ export default function Table<T>({
         <div className="flex h-full w-full flex-col justify-between gap-6 overflow-hidden">
             <div className="flex-grow overflow-y-scroll overflow-x-auto custom-scrollbar">
                 {isLoading ? (
-                    <div className="w-full h-full flex items-center justify-center border">
+                    <div className="w-full h-full flex items-center justify-center">
                         <p>Loading Transactions...</p>
                     </div>
                 ) : (
@@ -92,7 +92,7 @@ export default function Table<T>({
                 <div className="flex gap-2 w-fit px-2 py-1 rounded-md bg-secondary">
                     <button
                         onClick={() => setPageIdx(0)}
-                        disabled={pageCount === 1}
+                        disabled={pageIdx === 0}
                         className={cn(pageIdx === 0 && 'opacity-50')}
                     >
                         {'<<'}
@@ -109,15 +109,19 @@ export default function Table<T>({
                     </span>
                     <button
                         onClick={() => setPageIdx(pageIdx + 1)}
-                        disabled={pageIdx === pageCount}
-                        className={cn(pageIdx === pageCount && 'opacity-50')}
+                        disabled={pageIdx + 1 === pageCount}
+                        className={cn(
+                            pageIdx + 1 === pageCount && 'opacity-50'
+                        )}
                     >
                         {'>'}
                     </button>
                     <button
                         onClick={() => setPageIdx(pageCount - 1)}
-                        disabled={pageIdx === pageCount}
-                        className={cn(pageIdx === pageCount && 'opacity-50')}
+                        disabled={pageIdx + 1 === pageCount}
+                        className={cn(
+                            pageIdx + 1 === pageCount && 'opacity-50'
+                        )}
                     >
                         {'>>'}
                     </button>
