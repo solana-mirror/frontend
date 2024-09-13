@@ -11,7 +11,7 @@ import {
     ParsedAta,
     TransactionResponse,
 } from 'solana-mirror'
-import { formatTableTxs } from '@/utils'
+import { debounce, formatTableTxs } from '@/utils'
 
 type Props = {
     walletAddress: string
@@ -39,7 +39,7 @@ export default function TransactionHistory({ walletAddress }: Props) {
     }, [])
 
     useEffect(() => {
-        async function fetchData() {
+        const debouncedFetchData = debounce(async () => {
             setIsLoading(true)
             const rawTxs = (await getTransactions(publicKey, [
                 pageIdx * 15,
@@ -51,9 +51,13 @@ export default function TransactionHistory({ walletAddress }: Props) {
             const formattedTxs = formatTableTxs(rawTxs.transactions, atas)
             setTxs(formattedTxs)
             setIsLoading(false)
-        }
+        }, 500)
 
-        fetchData()
+        debouncedFetchData()
+
+        return () => {
+            debouncedFetchData.cancel()
+        }
     }, [walletAddress, pageIdx])
 
     return (
