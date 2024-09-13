@@ -15,7 +15,7 @@ export default function BalancesToggles({ netWorth, atas }: Props) {
     const [noPriceTokensHidden, setNoPriceTokensHidden] = useState(false)
 
     return (
-        <div className="flex flex-col gap-4 p-4 bg-primary rounded-md">
+        <div className="flex flex-col gap-4 p-4 bg-primary rounded-md min-h-48">
             <div className="flex justify-between">
                 <div className="flex items-center gap-1">
                     <p className="text-xl">Spot Balances</p>
@@ -59,16 +59,23 @@ export default function BalancesToggles({ netWorth, atas }: Props) {
                     )}
                 </div>
             </div>
-
-            {atas
-                .filter((ata) => !noPriceTokensHidden || ata.price)
-                .map((ata, i) => (
-                    <Balance
-                        key={i}
-                        ata={ata}
-                        balancesHidden={balancesHidden}
-                    />
-                ))}
+            {atas.length ? (
+                <>
+                    {atas
+                        .filter((ata) => !noPriceTokensHidden || ata.price)
+                        .map((ata, i) => (
+                            <Balance
+                                key={i}
+                                ata={ata}
+                                balancesHidden={balancesHidden}
+                            />
+                        ))}
+                </>
+            ) : (
+                <div className="flex flex-grow items-center justify-center text-white/30">
+                    No token accounts found
+                </div>
+            )}
         </div>
     )
 }

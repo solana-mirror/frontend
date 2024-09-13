@@ -89,19 +89,26 @@ export function EChart({ chartData }: Props) {
         setChartOptions(option)
     }, [chartData])
 
+    if (!chartData.length) {
+        return (
+            <div className="flex items-center justify-center h-full w-full min-h-64 rounded-md border border-white/30 border-dashed">
+                <p className="text-white/30">
+                    No data available for the selected timeframe
+                </p>
+            </div>
+        )
+    }
+
     return (
-        <>
-            {chartOptions && (
-                <ReactECharts
-                    option={chartOptions}
-                    opts={{ renderer: 'svg' }}
-                    style={{
-                        height: '100%',
-                        width: '100%',
-                        minHeight: '256px',
-                    }}
-                />
-            )}
-        </>
+        <ReactECharts
+            option={chartOptions}
+            opts={{ renderer: 'svg' }}
+            className="rounded-md border border-dashed border-white/30"
+            style={{
+                height: '100%',
+                width: '100%',
+                minHeight: '256px',
+            }}
+        />
     )
 }
