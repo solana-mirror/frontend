@@ -6,7 +6,7 @@ import { formatAddress } from '@/utils'
 import Hyperlink from '@/components/UI/Hyperlink'
 import { FormattedTx, TokenTransactedDisplay } from '@/types'
 
-const columnHelper = createColumnHelper<FormattedTx>()
+const columnHelper = createColumnHelper<FormattedTx<string>>()
 
 export const transactionColumns = [
     columnHelper.accessor(
@@ -103,7 +103,11 @@ export const transactionColumns = [
     ),
 ]
 
-function BalanceChanges({ changes }: { changes: TokenTransactedDisplay[] }) {
+function BalanceChanges({
+    changes,
+}: {
+    changes: TokenTransactedDisplay<string>[]
+}) {
     return (
         <div className="flex flex-col gap-1">
             {changes.length ? (
