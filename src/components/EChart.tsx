@@ -87,6 +87,7 @@ export function EChart({ chartData }: Props) {
         }
 
         setChartOptions(option)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartData])
 
     if (!chartData.length) {

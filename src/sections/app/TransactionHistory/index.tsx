@@ -3,7 +3,7 @@
 import Table from '@/components/Table'
 import { transactionColumns } from './transactionColumns'
 import { FormattedTx } from '@/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import {
     getTokenAccounts,
@@ -18,7 +18,10 @@ type Props = {
 }
 
 export default function TransactionHistory({ walletAddress }: Props) {
-    const publicKey = new PublicKey(walletAddress)
+    const publicKey = useMemo(
+        () => new PublicKey(walletAddress),
+        [walletAddress]
+    )
 
     const [isLoading, setIsLoading] = useState(false)
     const [txs, setTxs] = useState<FormattedTx<string>[]>([])
@@ -36,7 +39,7 @@ export default function TransactionHistory({ walletAddress }: Props) {
         }
 
         fetchAtas()
-    }, [])
+    }, [publicKey])
 
     useEffect(() => {
         const debouncedFetchData = debounce(async () => {
@@ -53,12 +56,14 @@ export default function TransactionHistory({ walletAddress }: Props) {
             setIsLoading(false)
         }, 500)
 
-        debouncedFetchData()
+        if (atas.length) {
+            debouncedFetchData()
+        }
 
         return () => {
             debouncedFetchData.cancel()
         }
-    }, [walletAddress, pageIdx])
+    }, [walletAddress, pageIdx, atas, publicKey])
 
     return (
         <div className="w-full h-full lg:w-1/2 flex flex-col gap-6 font-semibold p-6">

@@ -55,7 +55,7 @@ export default function TimeframeSelector({ chartData }: Props) {
                 setSelectedChartData(oneWeekFiltered)
                 break
         }
-    }, [timeframe])
+    }, [timeframe, chartData])
 
     return (
         <div className="w-full flex flex-col h-full md:h-1/2 min-h-96 gap-4 p-4 bg-primary rounded-md">
