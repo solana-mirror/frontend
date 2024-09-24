@@ -1,6 +1,6 @@
 import { cn, copy, formatAddress } from '@/utils'
 import { Button } from '../UI/Button'
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import { Modal } from '../UI/Modal'
 import { LAMPORTS_PER_SOL, Connection, PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -23,7 +23,7 @@ export default function WalletModal({ onToggleModal }: Props) {
     }, [copied])
 
     const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
-    const client = new Connection(rpc)
+    const client = useMemo(() => new Connection(rpc), [rpc])
 
     const getSolBalance = useCallback(async () => {
         if (!publicKey) {
@@ -32,7 +32,7 @@ export default function WalletModal({ onToggleModal }: Props) {
         const lamports = await client.getBalance(publicKey)
         const formatted = +(lamports / LAMPORTS_PER_SOL).toFixed(5)
         setSolBalance(formatted)
-    }, [publicKey])
+    }, [publicKey, client])
 
     useEffect(() => {
         getSolBalance()
