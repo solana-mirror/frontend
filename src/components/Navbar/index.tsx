@@ -14,9 +14,10 @@ import WalletModal from './WalletModal'
 
 type Props = {
     hasSearch: boolean
+    rpc: string
 }
 
-export default function NavBar({ hasSearch }: Props) {
+export default function NavBar({ rpc, hasSearch }: Props) {
     const router = useRouter()
 
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -82,6 +83,7 @@ export default function NavBar({ hasSearch }: Props) {
 
             {isModalOpen && publicKey ? (
                 <WalletModal
+                    rpc={rpc}
                     onToggleModal={() => setIsModalOpen(!isModalOpen)}
                 />
             ) : isModalOpen && !publicKey ? (

@@ -18,6 +18,7 @@ type Props = {
 
 export default function App({ params }: Props) {
     const walletAddress = params.wallet
+    const rpc = process.env.RPC as string
 
     // Disable caching
     const path = `/address/${walletAddress}`
@@ -31,7 +32,7 @@ export default function App({ params }: Props) {
 
     return (
         <div className="h-screen flex flex-col">
-            <NavBar hasSearch={true} />
+            <NavBar rpc={rpc} hasSearch={true} />
             {watch ? (
                 <div className="flex flex-col h-full overflow-y-auto no-scrollbar">
                     <AddressBar walletAddress={walletAddress} />

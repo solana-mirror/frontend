@@ -7,9 +7,10 @@ import { useWallet } from '@solana/wallet-adapter-react'
 
 type Props = {
     onToggleModal: () => void
+    rpc: string
 }
 
-export default function WalletModal({ onToggleModal }: Props) {
+export default function WalletModal({ rpc, onToggleModal }: Props) {
     const [solBalance, setSolBalance] = useState<number>()
     const [copied, setCopied] = useState(false)
 
@@ -22,9 +23,7 @@ export default function WalletModal({ onToggleModal }: Props) {
         }
     }, [copied])
 
-    const rpc = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
     const client = useMemo(() => new Connection(rpc), [rpc])
-
     const getSolBalance = useCallback(async () => {
         if (!publicKey) {
             return
