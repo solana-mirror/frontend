@@ -1,6 +1,9 @@
 import NavBar from '@/components/Navbar'
 import { SearchInput } from '@/components/SearchInput'
 
+// Force dynamic for env
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
     const rpc = process.env.RPC as string
 
