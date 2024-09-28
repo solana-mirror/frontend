@@ -22,7 +22,7 @@ export default function BalancesToggles({ netWorth, atas }: Props) {
                     <div className="flex items-center gap-1 text-[6px]">
                         <Image
                             onClick={() => setBalancesHidden(!balancesHidden)}
-                            src={balancesHidden ? '/Eye.svg' : '/EyeOff.svg'}
+                            src={balancesHidden ? '/EyeOff.svg' : '/Eye.svg'}
                             alt="Show/hide balances"
                             width={24}
                             height={24}
