@@ -34,7 +34,7 @@ export const SearchInput = ({ size }: Props) => {
         })
     }
 
-    if (isPending) {
+    if (!isPending) {
         return <Splashscreen />
     }
 

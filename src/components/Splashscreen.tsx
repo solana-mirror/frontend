@@ -7,14 +7,14 @@ export default function Splashscreen() {
                 src="/splashscreen.png"
                 width={512}
                 height={256}
-                className="hidden md:block"
+                className="hidden md:block animate-pulse"
                 alt="solana mirror"
             />
             <Image
                 src="/splashscreen_mobile.png"
                 width={128}
                 height={128}
-                className="block md:hidden"
+                className="block md:hidden animate-pulse"
                 alt="solana mirror"
             />
         </div>
