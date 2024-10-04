@@ -23,11 +23,15 @@ export default function TransactionHistory({ walletAddress }: Props) {
         [walletAddress]
     )
 
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [txs, setTxs] = useState<FormattedTx<string>[]>([])
     const [atas, setAtas] = useState<ParsedAta<string, string>[]>([])
     const [count, setCount] = useState(0)
     const [pageIdx, setPageIdx] = useState(0)
+
+    useEffect(() => {
+        setIsLoading(true)
+    }, [])
 
     useEffect(() => {
         async function fetchAtas() {
@@ -70,7 +74,7 @@ export default function TransactionHistory({ walletAddress }: Props) {
             <div className="flex justify-between">
                 <p className="text-2xl">Transaction History</p>
             </div>
-            {txs.length ? (
+            {txs.length || isLoading ? (
                 <Table
                     data={txs}
                     columns={transactionColumns}
