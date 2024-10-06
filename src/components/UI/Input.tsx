@@ -7,6 +7,8 @@ type Props = {
     shortcut: string
     size: 'sm' | false
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onFocus?: () => void
+    onBlur?: () => void
 }
 
 export const Input = ({
@@ -15,6 +17,8 @@ export const Input = ({
     shortcut,
     size,
     onChange,
+    onFocus,
+    onBlur,
 }: Props) => {
     const classes = {
         common: 'flex gap-2 py-4 px-6 items-center bg-primary rounded-md font-bold',
@@ -30,6 +34,8 @@ export const Input = ({
                 placeholder={placeholder}
                 className="bg-inherit w-full outline-none"
                 onChange={onChange}
+                onFocus={onFocus}
+                onBlur={onBlur}
             />
             <p className="text-white/70">{shortcut}</p>
         </div>

@@ -7,6 +7,7 @@ import { Suspense } from 'react'
 import React from 'react'
 import SuspenseFallback from '@/components/SuspenseFallback'
 import { revalidatePath } from 'next/cache'
+import { validatePublicKey } from '@/utils'
 
 const Chart = React.lazy(() => import('@/sections/app/Chart'))
 
@@ -24,16 +25,12 @@ export default function App({ params }: Props) {
     const path = `/address/${walletAddress}`
     revalidatePath(path)
 
-    let watch
-
-    try {
-        watch = new PublicKey(walletAddress.toString())
-    } catch {}
+    const isValidPublicKey = validatePublicKey(walletAddress)
 
     return (
         <div className="h-screen flex flex-col">
             <NavBar rpc={rpc} hasSearch={true} />
-            {watch ? (
+            {isValidPublicKey ? (
                 <div className="flex flex-col h-full overflow-y-auto no-scrollbar">
                     <AddressBar walletAddress={walletAddress} />
                     <div className="flex flex-col lg:flex-row flex-grow lg:overflow-hidden">

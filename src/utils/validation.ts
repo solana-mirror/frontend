@@ -16,3 +16,12 @@ export function handleSearchAccInputChange(
         }
     }
 }
+
+export function validatePublicKey(address: string) {
+    try {
+        new PublicKey(address.toString())
+        return true
+    } catch {
+        return false
+    }
+}
