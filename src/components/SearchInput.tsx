@@ -28,39 +28,29 @@ export const SearchInput = ({ size }: Props) => {
         setStoredWallets(wallets)
     }, [])
 
-    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-
-        const address = inputRef.current?.value
-
+    function handleWalletSelected(address: string | undefined) {
         if (!address) {
             return
         }
 
+        // Only store if it's a valid public key
         if (validatePublicKey(address)) {
-            const walletBuffer = new RingBuffer<string>(3, storedWallets)
-
-            walletBuffer.unshift(address)
-
-            const updatedWallets = walletBuffer.getItems()
-
+            const walletBuffer = new RingBuffer<string>(storedWallets, 3)
+            walletBuffer.add(address)
+            const updatedWallets = walletBuffer.items
             setStoredWallets(updatedWallets)
-
             localStorage.setItem('wallets', JSON.stringify(updatedWallets))
         }
 
-        pushToAddress(address)
-    }
-
-    function pushToAddress(address: string) {
+        // Always push to the address route
         startTransition(() => {
             router.push(`/address/${address}`)
         })
     }
 
-    function handleDropdownMouseDown(e: React.MouseEvent) {
-        // Prevent blur event when interacting with the dropdown
+    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        handleWalletSelected(inputRef.current?.value)
     }
 
     if (isPending) {
@@ -86,19 +76,18 @@ export const SearchInput = ({ size }: Props) => {
                 />
             </div>
             {isFocus && storedWallets.length ? (
-                <div
-                    className="w-full flex flex-col absolute bg-primary rounded-md "
-                    style={{ top: '100%' }}
-                >
-                    {storedWallets.map((i, x) => (
+                <div className="w-full flex flex-col absolute bg-primary rounded-md top-full">
+                    {storedWallets.map((x, i) => (
                         <button
                             key={i}
                             type="button"
-                            onMouseDown={handleDropdownMouseDown}
-                            onClick={() => pushToAddress(storedWallets[x])}
+                            onMouseDown={(e: React.MouseEvent) =>
+                                e.preventDefault()
+                            }
+                            onClick={() => handleWalletSelected(x)}
                             className="w-full text-left px-6 py-4 font-bold hover:opacity-70 transition duration-300"
                         >
-                            {storedWallets[x]}
+                            {x}
                         </button>
                     ))}
                 </div>

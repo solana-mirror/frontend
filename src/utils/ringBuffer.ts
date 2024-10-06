@@ -1,33 +1,29 @@
 export class RingBuffer<T> {
-    private buffer: T[] = []
+    public items: T[] = []
     private maxLength: number
 
-    constructor(maxLength: number, items: T[]) {
+    constructor(items: T[], maxLength: number) {
         this.maxLength = maxLength
-        this.buffer = items.slice(0, maxLength)
+        this.items = items.slice(0, maxLength)
     }
 
-    unshift(item: T) {
-        const indexOfDuplicated = this.buffer.findIndex(
-            (_, x) => this.buffer[x] === item
+    add(item: T) {
+        const indexOfDuplicated = this.items.findIndex(
+            (_, x) => this.items[x] === item
         )
 
         if (indexOfDuplicated > -1) {
-            this.buffer.splice(indexOfDuplicated, 1)
+            this.items.splice(indexOfDuplicated, 1)
         }
 
-        this.buffer.unshift(item)
+        this.items.unshift(item)
 
-        if (this.buffer.length > this.maxLength) {
-            this.buffer.pop()
+        if (this.items.length > this.maxLength) {
+            this.items.pop()
         }
-    }
-
-    getItems(): T[] {
-        return this.buffer
     }
 
     length(): number {
-        return this.buffer.length
+        return this.items.length
     }
 }
