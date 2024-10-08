@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { ChartDataWithPrice, getChartData } from 'solana-mirror'
+import { MinimalChartData, getChartData } from 'solana-mirror'
 import TimeframeSelector from './TimeframeSelector'
 
 type Props = {
@@ -7,14 +7,15 @@ type Props = {
 }
 
 export default async function Chart({ walletAddress }: Props) {
-    let chartData: ChartDataWithPrice<string>[] = []
+    let chartData: MinimalChartData[] = []
 
     try {
         chartData = (await getChartData(
             new PublicKey(walletAddress),
             90,
-            'd'
-        )) as ChartDataWithPrice<string>[]
+            'd',
+            false
+        )) as MinimalChartData[]
     } catch (e) {
         console.log('e fetching chart data:', e)
     }

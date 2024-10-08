@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { ChartDataWithPrice } from 'solana-mirror'
+import { MinimalChartData } from 'solana-mirror'
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
 
 type Props = {
-    chartData: ChartDataWithPrice<string>[]
+    chartData: MinimalChartData[]
 }
 
 export function EChart({ chartData }: Props) {

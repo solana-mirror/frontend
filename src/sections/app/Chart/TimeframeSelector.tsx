@@ -4,10 +4,10 @@ import { EChart } from '@/components/EChart'
 import { cn } from '@/utils'
 import BN from 'bn.js'
 import { useEffect, useState } from 'react'
-import { ChartDataWithPrice } from 'solana-mirror'
+import { MinimalChartData } from 'solana-mirror'
 
 type Props = {
-    chartData: ChartDataWithPrice<string>[]
+    chartData: MinimalChartData[]
 }
 
 enum Timeframes {
@@ -20,13 +20,10 @@ export default function TimeframeSelector({ chartData }: Props) {
     // Something something filter the timestamps
     const [timeframe, setTimeframe] = useState<Timeframes>(Timeframes.OneMonth)
     const [selectedChartData, setSelectedChartData] =
-        useState<ChartDataWithPrice<string>[]>(chartData)
+        useState<MinimalChartData[]>(chartData)
 
-    function filterChartData(
-        chartData: ChartDataWithPrice<string>[],
-        startT: number
-    ) {
-        const newData: ChartDataWithPrice<string>[] = []
+    function filterChartData(chartData: MinimalChartData[], startT: number) {
+        const newData: MinimalChartData[] = []
 
         for (let i = chartData.length - 1; i >= 0; i--) {
             if (chartData[i].timestamp > startT) {
