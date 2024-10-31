@@ -10,12 +10,12 @@ export default async function Chart({ walletAddress }: Props) {
     let chartData: MinimalChartData[] = []
 
     try {
-        chartData = (await getChartData(
+        chartData = await getChartData(
             new PublicKey(walletAddress),
-            90,
+            89,
             'd',
             false
-        )) as MinimalChartData[]
+        )
     } catch (e) {
         console.log('e fetching chart data:', e)
     }
