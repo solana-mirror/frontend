@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { Input } from './UI/Input'
-import { cn, RingBuffer, validatePublicKey } from '@/utils'
+import { cn, RingBuffer, validatePublicKey, formatAddress } from '@/utils'
 import useShortcut, { useMetaKey } from '@/hooks/useShortcut'
 import Splashscreen from './Splashscreen'
 
@@ -17,6 +17,8 @@ export const SearchInput = ({ size }: Props) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [storedWallets, setStoredWallets] = useState<string[]>([])
     const [isFocus, setIsFocus] = useState(false)
+
+    const isMd = size === 'md'
 
     const metaKey = useMetaKey()
     useShortcut(() => {
@@ -60,17 +62,14 @@ export const SearchInput = ({ size }: Props) => {
     return (
         <form
             onSubmit={onSubmit}
-            className={cn(
-                'relative',
-                size === 'md' ? 'hidden md:block' : 'w-full'
-            )}
+            className={cn('relative', isMd ? 'hidden md:block' : 'w-full')}
         >
             <div className="relative w-full mb-2">
                 <Input
                     inputRef={inputRef}
                     placeholder="Search Account"
                     shortcut={`${metaKey}+K`}
-                    size={size === 'md' && 'sm'}
+                    size={isMd && 'sm'}
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
                 />
@@ -87,7 +86,7 @@ export const SearchInput = ({ size }: Props) => {
                             onClick={() => handleWalletSelected(x)}
                             className="w-full text-left px-6 py-4 font-bold hover:opacity-70 transition duration-300"
                         >
-                            {x}
+                            {isMd ? formatAddress(x, 12) : x}
                         </button>
                     ))}
                 </div>
