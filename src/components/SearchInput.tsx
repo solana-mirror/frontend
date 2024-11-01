@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { Input } from './UI/Input'
-import { cn, RingBuffer, validatePublicKey } from '@/utils'
+import { cn, RingBuffer, validatePublicKey, formatAddress } from '@/utils'
 import useShortcut, { useMetaKey } from '@/hooks/useShortcut'
 import Splashscreen from './Splashscreen'
 
@@ -87,7 +87,7 @@ export const SearchInput = ({ size }: Props) => {
                             onClick={() => handleWalletSelected(x)}
                             className="w-full text-left px-6 py-4 font-bold hover:opacity-70 transition duration-300"
                         >
-                            {x}
+                            {size === 'md' ? formatAddress(x, 12) : x}
                         </button>
                     ))}
                 </div>
