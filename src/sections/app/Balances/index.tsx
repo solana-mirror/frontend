@@ -1,6 +1,8 @@
 import { getTokenAccounts, ParsedAta } from 'solana-mirror'
 import { PublicKey } from '@solana/web3.js'
-import BalancesToggles from './BalancesToggles'
+import SpotBalances from './SpotBalances'
+import { raydiumPositions } from '@/mockData'
+import RaydiumPositions from './RaydiumPositions'
 
 type Props = {
     walletAddress: string
@@ -31,8 +33,9 @@ export default async function Balances({ walletAddress }: Props) {
     }
 
     return (
-        <div className="flex-grow text-center font-bold md:h-1/2">
-            <BalancesToggles netWorth={netWorth} atas={atas} />
+        <div className="flex flex-col gap-2.5 font-bold md:h-1/2">
+            <SpotBalances netWorth={netWorth} atas={atas} />
+            <RaydiumPositions positions={raydiumPositions} />
         </div>
     )
 }

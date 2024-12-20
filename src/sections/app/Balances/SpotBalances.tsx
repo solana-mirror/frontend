@@ -10,12 +10,12 @@ type Props = {
     atas: ParsedAta<string, string>[]
 }
 
-export default function BalancesToggles({ netWorth, atas }: Props) {
+export default function SpotBalances({ netWorth, atas }: Props) {
     const [balancesHidden, setBalancesHidden] = useState(false)
     const [noPriceTokensHidden, setNoPriceTokensHidden] = useState(false)
 
     return (
-        <div className="flex flex-col gap-4 p-4 bg-primary rounded-md min-h-48">
+        <div className="flex flex-col gap-4 p-4 bg-primary rounded-md ">
             <div className="flex justify-between">
                 <div className="flex items-center gap-1">
                     <p className="text-xl">Spot Balances</p>
