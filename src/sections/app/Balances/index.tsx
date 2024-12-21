@@ -1,6 +1,12 @@
-import { getTokenAccounts, ParsedAta } from 'solana-mirror'
+import {
+    BalancesResponse,
+    getTokenAccounts,
+    ParsedAta,
+    ParsedPosition,
+} from 'solana-mirror'
 import { PublicKey } from '@solana/web3.js'
-import BalancesToggles from './BalancesToggles'
+import SpotBalances from './SpotBalances'
+import RaydiumPositions from './RaydiumPositions'
 
 type Props = {
     walletAddress: string
@@ -8,19 +14,21 @@ type Props = {
 
 export default async function Balances({ walletAddress }: Props) {
     let atas: ParsedAta<string, string>[] = []
+    let raydiumPositions: ParsedPosition<string>[] | undefined
     let netWorth: number = 0
 
     try {
-        let rawAtas = (await getTokenAccounts(
+        let balances = (await getTokenAccounts(
             new PublicKey(walletAddress)
-        )) as ParsedAta<string, string>[]
-        atas = rawAtas
+        )) as BalancesResponse<string, string>
+        atas = balances.accounts
             .filter((x) => x.balance.formatted !== 0)
             .sort(
                 (a, b) =>
                     b.balance.formatted * b.price -
                     a.balance.formatted * a.price
             )
+        raydiumPositions = balances.raydium
 
         //TODO: default image
         for (let i = 0; i < atas.length; i++) {
@@ -31,8 +39,17 @@ export default async function Balances({ walletAddress }: Props) {
     }
 
     return (
-        <div className="flex-grow text-center font-bold md:h-1/2">
-            <BalancesToggles netWorth={netWorth} atas={atas} />
+        <div className="flex flex-col gap-2.5 font-bold md:h-1/2">
+            <SpotBalances netWorth={netWorth} atas={atas} />
+            {raydiumPositions?.length && (
+                <RaydiumPositions
+                    totalValue={raydiumPositions.reduce(
+                        (prev, x) => prev + Number(x.totalValueUsd || 0),
+                        0
+                    )}
+                    positions={raydiumPositions}
+                />
+            )}
         </div>
     )
 }

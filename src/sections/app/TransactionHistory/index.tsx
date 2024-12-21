@@ -6,6 +6,7 @@ import { FormattedTx } from '@/types'
 import { useEffect, useMemo, useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import {
+    BalancesResponse,
     getTokenAccounts,
     getTransactions,
     ParsedAta,
@@ -35,11 +36,11 @@ export default function TransactionHistory({ walletAddress }: Props) {
 
     useEffect(() => {
         async function fetchAtas() {
-            const _atas = (await getTokenAccounts(publicKey)) as ParsedAta<
-                string,
-                string
-            >[]
-            setAtas(_atas)
+            const balances = (await getTokenAccounts(
+                new PublicKey(walletAddress),
+                false
+            )) as BalancesResponse<string, string>
+            setAtas(balances.accounts)
         }
 
         fetchAtas()

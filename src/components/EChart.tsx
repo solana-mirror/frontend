@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { MinimalChartData } from 'solana-mirror'
+import { priceFormatter } from '@/utils'
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
 
@@ -12,11 +13,6 @@ type Props = {
 
 export function EChart({ chartData }: Props) {
     const [chartOptions, setChartOptions] = useState({})
-
-    const priceFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    })
 
     const xAxisFormatter = (v: string) => {
         return v.split(',')[0]
