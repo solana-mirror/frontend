@@ -1,12 +1,12 @@
-import { ParsedPosition } from '@/mockData'
 import BalancesContainer from './BalancesContainer'
 import BalanceRow from './BalanceRow'
 import Image from 'next/image'
 import { amountFormatter, priceFormatter } from '@/utils'
+import { ParsedPosition } from 'solana-mirror'
 
 type Props = {
     totalValue: number
-    positions: ParsedPosition[]
+    positions: ParsedPosition<string>[]
 }
 
 export default function RaydiumPositions({ totalValue, positions }: Props) {
@@ -40,7 +40,7 @@ export default function RaydiumPositions({ totalValue, positions }: Props) {
                     tokenBalance={`${amountFormatter.format(x.tokenB.amount.amount.formatted)} ${x.tokenB.symbol} / ${amountFormatter.format(x.tokenA.amount.amount.formatted)} ${x.tokenA.symbol}`}
                     value={
                         x.tokenA.amount.price || x.tokenB.amount.price
-                            ? priceFormatter.format(x.totalValueUsd)
+                            ? priceFormatter.format(x.totalValueUsd || 0)
                             : '-'
                     }
                     tokenIcons={

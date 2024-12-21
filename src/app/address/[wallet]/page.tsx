@@ -1,4 +1,3 @@
-import { PublicKey } from '@solana/web3.js'
 import NavBar from '@/components/Navbar'
 import AddressBar from '@/sections/app/AddressBar'
 import Balances from '@/sections/app/Balances'
@@ -44,7 +43,7 @@ export default function App({ params }: Props) {
                             </Suspense>
                             <Balances walletAddress={walletAddress} />
                         </div>
-                        {/* <TransactionHistory walletAddress={walletAddress} /> */}
+                        <TransactionHistory walletAddress={walletAddress} />
                     </div>
                 </div>
             ) : (
