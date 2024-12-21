@@ -88,7 +88,7 @@ export default function SpotBalances({ netWorth, atas }: Props) {
                                     />
                                 }
                                 tokenLabel={ata.name}
-                                publicKey={ata.mint}
+                                url={`https://solana.fm/address/${ata.mint}`}
                                 balancesHidden={balancesHidden}
                             />
                         ))}

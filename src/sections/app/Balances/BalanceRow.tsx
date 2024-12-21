@@ -5,7 +5,7 @@ type Props = {
     value: string
     tokenIcons: JSX.Element
     tokenLabel: string
-    publicKey: string
+    url: string
     balancesHidden?: boolean
 }
 
@@ -14,16 +14,14 @@ export default function BalanceRow({
     value,
     tokenIcons,
     tokenLabel,
-    publicKey,
+    url,
     balancesHidden,
 }: Props) {
     return (
         <div className="flex items-center justify-between">
             <div className="flex gap-2">
                 {tokenIcons}
-                <Hyperlink href={`https://solana.fm/address/${publicKey}`}>
-                    {tokenLabel}
-                </Hyperlink>
+                <Hyperlink href={url}>{tokenLabel}</Hyperlink>
             </div>
             <div className="text-right">
                 <p>{balancesHidden ? '*****' : tokenBalance}</p>

@@ -62,7 +62,7 @@ export default function RaydiumPositions({ totalValue, positions }: Props) {
                         </div>
                     }
                     tokenLabel={`${x.tokenB.symbol}/${x.tokenA.symbol}`}
-                    publicKey={''}
+                    url={`https://raydium.io/clmm/create-position/?pool_id=${x.protocol.poolId}`}
                 />
             ))}
         </BalancesContainer>
