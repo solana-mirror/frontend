@@ -78,3 +78,12 @@ export function formatTableTxs(
 
     return formattedTxs
 }
+
+export const amountFormatter = new Intl.NumberFormat('en', {
+    minimumFractionDigits: 2,
+})
+
+export const priceFormatter = new Intl.NumberFormat('en', {
+    style: 'currency',
+    currency: 'USD',
+})
