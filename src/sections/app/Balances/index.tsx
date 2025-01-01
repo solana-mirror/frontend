@@ -41,7 +41,7 @@ export default async function Balances({ walletAddress }: Props) {
     return (
         <div className="flex flex-col gap-2.5 font-bold md:h-1/2">
             <SpotBalances netWorth={netWorth} atas={atas} />
-            {raydiumPositions?.length && (
+            {raydiumPositions?.length ? (
                 <RaydiumPositions
                     totalValue={raydiumPositions.reduce(
                         (prev, x) => prev + Number(x.totalValueUsd || 0),
@@ -49,6 +49,8 @@ export default async function Balances({ walletAddress }: Props) {
                     )}
                     positions={raydiumPositions}
                 />
+            ) : (
+                ''
             )}
         </div>
     )
